@@ -29,7 +29,7 @@ const ThankYou = () => {
             </span>
           </div>
           <h1 className="font-display text-2xl md:text-3xl font-bold text-[#423324] mb-4">
-            You&apos;re Awesome!
+            You&apos;re Awesome!!
           </h1>
           <p className="text-gray-600 leading-relaxed mb-8">
             Your message has been received. We&apos;ll get back to you faster than a caffeinated squirrel. In the meantime, feel free to explore more of our site.
