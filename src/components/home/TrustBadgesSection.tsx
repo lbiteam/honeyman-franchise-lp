@@ -15,7 +15,7 @@ const TrustBadgesSection = () => (
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-5 text-amber-500 text-3xl shadow-md">
             <i className="fas fa-store-alt" />
           </div>
-          <h3 className="font-bold text-lg text-gray-900 mb-2">160+ Outlets</h3>
+          <h3 className="font-bold text-lg text-gray-900 mb-2">180+ Outlets</h3>
           <p className="text-sm text-gray-600 leading-relaxed">
             A proven business model operating successfully in 25+ cities across India.
           </p>

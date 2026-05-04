@@ -1,10 +1,5 @@
 [
- {
-  "Sr No": 1,
-  "Address": "# 277-284 , 1st cross , Neeladri Nagar , Electronic City Phase 1 , Bengaluru- 560100",
-  "City": "Banglore",
-  "State": "Karnataka"
- },
+ 
  {
   "Sr No": 2,
   "Address": "Not decided",
@@ -51,14 +46,9 @@
   "Sr No": 9,
   "Address": "Civic centre Bhillai",
   "City": "Bhillai",
-  "State": "Chhattisgarh"
+  "State": "Chattisgarh"
  },
- {
-  "Sr No": 10,
-  "Address": "Shop no 5 , Sahyog Daignostics Centre , Underground floor, Yash park apartments, near Tarodekar Cahmbers, Nanded",
-  "City": "Nanded",
-  "State": "Maharashtra"
- },
+ 
  {
   "Sr No": 11,
   "Address": "Adab city colony, Near karim hotel, haridwar road",
@@ -225,12 +215,7 @@
   "City": "mp",
   "State": "Madhya Pradesh"
  },
- {
-  "Sr No": 42,
-  "Address": "Elan Miracal,Sec 84,Gurgaon",
-  "City": "Gurgaon",
-  "State": "Haryana"
- },
+ 
  {
   "Sr No": 43,
   "Address": "kanpur Uttar Pradesh",
@@ -318,9 +303,9 @@
  
  {
   "Sr No": 58,
-  "Address": "Hotel Ramayan Inn. Rishikesh, Uttrakhand.",
+  "Address": "Hotel Ramayan Inn. Rishikesh, Uttarakhand.",
   "City": "rishikesh",
-  "State": "Uttrakhand"
+  "State": "Uttarakhand"
  },
  {
   "Sr No": 59,
@@ -340,17 +325,12 @@
   "City": "Katihar",
   "State": "Bihar"
  },
- {
-  "Sr No": 62,
-  "Address": "Shop no 7,Ground floor,CSC-4,Sector-2,Rohini,Delhi",
-  "City": "Rohini",
-  "State": "Delhi"
- },
+ 
  {
   "Sr No": 63,
   "Address": "153,Ward no 26,Near behind bunkar sung badi,Durg,",
   "City": "Durg",
-  "State": "Chhattisgarh"
+  "State": "Chattisgarh"
  },
  {
   "Sr No": 64,
@@ -449,12 +429,7 @@
   "City": "Harapanahalli ",
   "State": "Karnataka"
  },
- {
-  "Sr No": 82,
-  "Address": " Grocery Point, Maharaja Ranjit Singh Colony, Street No. 5, Barnala Road, Badrukhan, Sangrur (Pb.) 148001",
-  "City": "Sangrur",
-  "State": "Punjab"
- },
+
  {
   "Sr No": 83,
   "Address": "A.B Road, guljhara, dhamond ,( M.P ) pin code no - 454552",
@@ -497,12 +472,7 @@
   "City": "Dwarka",
   "State": "Delhi"
  },
- {
-  "Sr No": 90,
-  "Address": "Rewa",
-  "City": "Rewa",
-  "State": "Madhya Pradesh"
- },
+
  {
   "Sr No": 91,
   "Address": "noida",
@@ -523,9 +493,9 @@
  },
  {
   "Sr No": 94,
-  "Address": "Amikapur ( Chhattisgarh ) ",
+  "Address": "Amikapur ( Chattisgarh ) ",
   "City": "Amikapur ",
-  "State": "Chhattisgarh"
+  "State": "Chattisgarh"
  },
  {
   "Sr No": 95,
@@ -545,13 +515,8 @@
   "City": "Hyderabad",
   "State": "Telangana"
  },
- {
-  "Sr No": 98,
-  "Address": "Shop No- 05,  New Grain Market, Opposite Sector -14 Gate No -02, Sirsa Road, Hisar-125001",
-  "City": "Hisar",
-  "State": "Haryana"
- }
- ,
+
+ 
  {
     "Sr No": 99,
     "Address": "Greater noida",
@@ -559,31 +524,16 @@
     "State": "Uttar Pradesh"
    }
  ,
- {
-    "Sr No": 100,
-    "Address": "Hotel Aapla 7/12,Purna Road, Pokharni Nanded-431601",
-    "City": "Nanded",
-    "State": "Maharashtra"
-   }
-,
-{
-   "Sr No": 101,
-   "Address": "Floor No;C1/604,Flat no:C1/604Fortune Kasturi,Hosangabad road",
-   "City": "indore",
-   "State": "Madhya Pradesh"
-  },
+ 
+
+
   {
    "Sr No": 102,
    "Address": "Rewa, Madhya Pradesh",
    "City": "Rewa",
    "State": "Madhya Pradesh"
   },
-  {
-   "Sr No": 102,
-   "Address": "Gumma,kotkhai ,district- shimla",
-   "City": "Gumma",
-   "State": "Himachal Pradesh"
-  },
+ 
   {
    "Sr No": 103,
    "Address": "Haibowal kalan,near lal kothi,baloki road,ludhiana 141001",
@@ -595,6 +545,117 @@
    "Address": "Dasuya-hoshiarpur",
    "City": "Dasuya",
    "State": "Punjab"
-  }
+  },
+  {
+   "Sr No": 105,
+   "Address": "L81B-1-Floor Malviya Nagar New Delhi 110017",
+   "City": "Malviya nagar",
+   "State": "Delhi"
+  },
+  {
+   "Sr No": 106,
+   "Address": "Rudransh Food, Shop No. C -1,\nGround Flor,\nPatel Colony sheri No. 2/2,\nBehind Vikash School, Vrundavan park-C, Jamnagar -361008\nGujarat.",
+   "City": "Jamnagar",
+   "State": "Gujarat"
+  },
+  {
+   "Sr No": 107,
+   "Address": "Bharat Petroleum , Near Malik dharam kanta, Railway Road, Ganaur , Sonipat",
+   "City": "sonipat",
+   "State": "Haryana"
+  },
+  {
+   "Sr No": 108,
+   "Address": "Amritsar Haveli the king of amritsari kulcha , Delhi pull industrial area, hissar road, sirsa, haryana 125055",
+   "City": "Sirsa",
+   "State": "Haryana"
+  },
+  {
+   "Sr No": 109,
+   "Address": "22-77,K M F Dairy bus stop Slivergate Kulshekar,Manglore,Karnatka " ,
+   "City": "Mangalore",
+   "State": "Karnataka"
+  },
+  {
+   "Sr No": 110,
+   "Address": "Shop No. 2, Tulsi Arcade Cidco, Chhatrapati Sambhajinagar Chhatrapati Sambhaji Nagar, MAHARASHTRA, 431003 " ,
+   "City": "Sambhaji Nagar",
+   "State": "Maharashtra"
+  },
+  {
+   "Sr No": 111,
+   "Address": "Shree Gokul dairy shop no12,Seabreez tower chs ltd plot no 16,sec 16,Nerul Navi Mumbai 400706 Maharashtra.",
+   "City": "Nerul",
+   "State": "Maharashtra"
+  },
+  {
+   "Sr No": 112,
+   "Address": "",
+   "City": "Akola",
+   "State": "Maharashtra"
+  },
+  {
+   "Sr No": 113,
+   "Address": "Building No./Flat No.: 66 ,Nagar Palika Shopping Complex, Road/Street: Hirapur Road ,Locality/Sub Locality: Nagar Palika Building 66 ,City/Town/Village: Chalisgaon ,District: Jalgaon ,State: Maharashtra ,PInCode: 424101",
+   "City": "Jalgaon",
+   "State": "Maharashtra"
+  },
+  {
+   "Sr No": 114   ,
+   "Address": "NIBM Post Office Rd, next to The Ark Mahadev Wadi, Autadwadi Handewadi, Kondhwa, Pune, Maharashtra 411048",
+   "City": "Pune",
+   "State": "Maharashtra"
+  },
+  {
+   "Sr No": 115   ,
+   "Address": "Rahon  road jain colony bahgya homes, Krishna Colony, Jodhewal, Ludhiana, Punjab 141007",
+   "City": "Ludhiana",
+   "State": "Punjab"
+  },
+  {
+   "Sr No": 116   ,
+   "Address": "Rahon  road jain colony bahgya homes, Krishna Colony, Jodhewal, Ludhiana, Punjab 141007",
+   "City": "Jodhpur",
+   "State": "Rajasthan"
+  },
+  {
+   "Sr No": 117  ,
+   "Address": "Rajasthan Bhilwara",
+   "City": "Rajasthan",
+   "State": "Rajasthan"
+  },
+  {
+   "Sr No": 118  ,
+   "Address": "Sainik  colony , Kashipur , Us nagar uk 24",
+   "City": "Kashipur",
+   "State": "Uttarakhand"
+  }, {
+   "Sr No": 118  ,
+   "Address": "DEHRADUN  Uttarakhand",
+   "City": "DEHRADUN",
+   "State": "Uttarakhand"
+  },{
+    "Sr No": 119  ,
+    "Address": "Building No./Flat No.: 416/4/1 416/4 Road/Street: CHAUPATIYAN Locality/Sub Locality: Dilaram Baradari",
+    "City": "Lucknow",
+    "State": "Uttar Pradesh"
+   },{
+    "Sr No": 120  ,
+    "Address": "Lucknow",
+    "City": "Lucknow",
+    "State": "Uttar Pradesh"
+   },
+   {
+    "Sr No": 121 ,
+    "Address": "Sitapur",
+    "City": "Lucknow",
+    "State": "Uttar Pradesh"
+   },
+   {
+    "Sr No": 122 ,
+    "Address": "Ghaziabad",
+    "City": "Ghaziabad",
+    "State": "Uttar Pradesh"
+   }
   
 ]

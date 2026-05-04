@@ -4,7 +4,6 @@ import { Mail, Phone, MapPin, Clock, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client directly
@@ -28,6 +27,33 @@ if (!zohoClientId || !zohoClientSecret || !zohoRefreshToken) {
 }
 
 const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+
+const DEFAULT_COUNTRY_CODE = "+91";
+
+const DIALING_CODES: { value: string; label: string }[] = [
+  { value: "+91", label: "India (+91)" },
+  { value: "+1", label: "United States (+1)" },
+  { value: "+44", label: "United Kingdom (+44)" },
+  { value: "+971", label: "UAE (+971)" },
+  { value: "+966", label: "Saudi Arabia (+966)" },
+  { value: "+974", label: "Qatar (+974)" },
+  { value: "+965", label: "Kuwait (+965)" },
+  { value: "+973", label: "Bahrain (+973)" },
+  { value: "+968", label: "Oman (+968)" },
+  { value: "+65", label: "Singapore (+65)" },
+  { value: "+60", label: "Malaysia (+60)" },
+  { value: "+61", label: "Australia (+61)" },
+  { value: "+86", label: "China (+86)" },
+  { value: "+81", label: "Japan (+81)" },
+];
+
+function formatFullPhone(countryCode: string, localPhone: string): string {
+  const cc = countryCode.trim();
+  const local = localPhone.replace(/\s/g, "").trim();
+  if (!cc && !local) return "";
+  if (!local) return cc;
+  return `${cc} ${local}`;
+}
 
 // Zoho CRM API Function - Calls serverless function to avoid CORS
 const createZohoLead = async (formData: ContactFormData): Promise<boolean> => {
@@ -84,12 +110,12 @@ interface ContactFormData {
 }
 
 const Contact = () => {
-  const { t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<ContactFormData>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
+    countryCode: DEFAULT_COUNTRY_CODE,
     phone: "",
     location: "",
     subject: "",
@@ -107,10 +133,15 @@ const Contact = () => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.message.trim()
+    ) {
       toast({
-        title: t("contactPage.toast.requiredFields"),
-        description: t("contactPage.toast.requiredFieldsDesc"),
+        title: "Please fill required fields",
+        description: "Name, email, phone and message are required.",
         variant: "destructive",
       });
       return;
@@ -120,8 +151,8 @@ const Contact = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast({
-        title: t("contactPage.toast.invalidEmail"),
-        description: t("contactPage.toast.invalidEmailDesc"),
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
         variant: "destructive",
       });
       return;
@@ -130,14 +161,26 @@ const Contact = () => {
     // Check if Supabase is configured
     if (!supabaseUrl || !supabaseKey) {
       toast({
-        title: t("contactPage.toast.configError"),
-        description: t("contactPage.toast.configErrorDesc"),
+        title: "Configuration Error",
+        description: "Contact form is not properly configured. Please try again later.",
         variant: "destructive",
       });
       return;
     }
 
     setIsSubmitting(true);
+
+    const countryCode = formData.countryCode.trim() || DEFAULT_COUNTRY_CODE;
+    const fullPhone = formatFullPhone(countryCode, formData.phone);
+
+    const payload: ContactFormData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: fullPhone,
+      location: formData.location.trim(),
+      subject: formData.subject,
+      message: formData.message.trim(),
+    };
 
     let supabaseSuccess = false;
     let zohoSuccess = false;
@@ -150,12 +193,12 @@ const Contact = () => {
           const { data, error } = await supabase
             .from('contact_messages')
             .insert({
-              name: formData.name.trim(),
-              email: formData.email.trim(),
-              phone: formData.phone.trim() || null,
-              location: formData.location.trim() || null,
-              subject: formData.subject || null,
-              message: formData.message.trim(),
+              name: payload.name,
+              email: payload.email,
+              phone: payload.phone || null,
+              location: payload.location || null,
+              subject: payload.subject || null,
+              message: payload.message,
             })
             .select()
             .single();
@@ -175,7 +218,7 @@ const Contact = () => {
       // Submit to Zoho CRM via serverless function
       if (zohoClientId && zohoClientSecret && zohoRefreshToken) {
         try {
-          const zohoResult = await createZohoLead(formData);
+          const zohoResult = await createZohoLead(payload);
           if (zohoResult) {
             zohoSuccess = true;
           } else {
@@ -192,6 +235,7 @@ const Contact = () => {
         setFormData({
           name: "",
           email: "",
+          countryCode: DEFAULT_COUNTRY_CODE,
           phone: "",
           location: "",
           subject: "",
@@ -202,10 +246,10 @@ const Contact = () => {
       } else {
         // If both failed, show error but still reset form
         toast({
-          title: t("contactPage.toast.error") || "Submission Error",
+          title: "Submission Error",
           description: errors.length > 0 
             ? errors.join('; ') 
-            : t("contactPage.toast.errorDesc") || "Failed to submit. Please try again.",
+            : "Failed to submit. Please try again.",
           variant: "destructive",
           duration: 5000,
         });
@@ -214,6 +258,7 @@ const Contact = () => {
         setFormData({
           name: "",
           email: "",
+          countryCode: DEFAULT_COUNTRY_CODE,
           phone: "",
           location: "",
           subject: "",
@@ -225,8 +270,8 @@ const Contact = () => {
       console.error('Form submission error:', error);
       
       toast({
-        title: t("contactPage.toast.error") || "Error",
-        description: error.message || t("contactPage.toast.errorDesc") || "An unexpected error occurred. Please try again.",
+        title: "Error",
+        description: error.message || "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
       
@@ -255,7 +300,7 @@ const Contact = () => {
             {/* Contact Form */}
             <div className="bg-card rounded-2xl p-8 shadow-soft">
               <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground mb-6">
-                {t("contactPage.sendMessage")}
+                Send us a Message
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -263,7 +308,7 @@ const Contact = () => {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                      {t("contactPage.name")} <span className="text-destructive">*</span>
+                      Name <span className="text-destructive">*</span>
                     </label>
                     <input
                       type="text"
@@ -274,12 +319,12 @@ const Contact = () => {
                       maxLength={100}
                       required={true}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder={t("contactPage.namePlaceholder")}
+                      placeholder="Your name"
                     />
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                      {t("contactPage.email")} 
+                      Email 
                     </label>
                     <input
                       type="email"
@@ -289,32 +334,52 @@ const Contact = () => {
                       onChange={handleChange}
                       maxLength={255}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder={t("contactPage.emailPlaceholder")}
+                      placeholder="your@email.com"
                     />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
-                      {t("contactPage.phone")}<span className="text-destructive">*</span>
-                    </label>
-                    
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      maxLength={20}
-                      required={true}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder={t("contactPage.phonePlaceholder")}
-                    />
+                    <span className="block text-sm font-medium text-foreground mb-2">
+                      Phone <span className="text-destructive">*</span>
+                    </span>
+                    <div className="flex gap-2">
+                      <label htmlFor="contactCountryCode" className="sr-only">
+                        Country code
+                      </label>
+                      <select
+                        id="contactCountryCode"
+                        name="countryCode"
+                        value={formData.countryCode}
+                        onChange={handleChange}
+                        required
+                        className="shrink-0 w-[min(11rem,42vw)] sm:w-40 px-3 py-3 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      >
+                        {DIALING_CODES.map(({ value, label }) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        maxLength={10}
+                        required
+                        className="min-w-[300px] flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        placeholder="1234567890"
+                      />
+                    </div>
                   </div>
-                  <div>
+                  
+                </div>
+                <div>
                     <label htmlFor="location" className="block text-sm font-medium text-foreground mb-2">
-                      {t("contactPage.location")}
+                      Location
                     </label>
                     <input
                       type="text"
@@ -324,15 +389,13 @@ const Contact = () => {
                       onChange={handleChange}
                       maxLength={100}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      placeholder={t("contactPage.locationPlaceholder")}
+                      placeholder="Your city or location"
                     />
                   </div>
-                </div>
-                
 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
-                    {t("contactPage.subject")}
+                    Subject
                   </label>
                   <select
                     id="subject"
@@ -341,11 +404,11 @@ const Contact = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   >
-                    <option value="">{t("contactPage.selectSubject")}</option>
-                    <option value="general">{t("contactPage.subjects.general")}</option>
-                    <option value="franchise">{t("contactPage.subjects.franchise")}</option>
-                    <option value="corporate">{t("contactPage.subjects.corporate")}</option>
-                    <option value="support">{t("contactPage.subjects.support")}</option>
+                    <option value="">Select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="franchise">Franchise Opportunity</option>
+                    <option value="corporate">Corporate gifting</option>
+                    <option value="support">Support Request</option>
                   
                   
                   </select>
@@ -353,7 +416,7 @@ const Contact = () => {
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                    {t("contactPage.message")} <span className="text-destructive">*</span>
+                    Message <span className="text-destructive">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -363,7 +426,7 @@ const Contact = () => {
                     maxLength={1000}
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                    placeholder={t("contactPage.messagePlaceholder")}
+                    placeholder="How can we help you?"
                   />
                 </div>
                 
@@ -375,12 +438,12 @@ const Contact = () => {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      {t("contactPage.sending")}
+                      Sending...
                     </>
                   ) : (
                     <>
                       <Send className="w-5 h-5" />
-                      {t("contactPage.sendMessageButton")}
+                      Send Message
                     </>
                   )}
                 </button>
@@ -389,9 +452,9 @@ const Contact = () => {
               {/* Company Address */}
               <div className="mt-8 bg-card rounded-lg p-6 shadow-soft">
                 <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
-                  {t("contactPage.companyName")}
+                  Honeyman Foods Pvt. Ltd.
                 </h3>
-                <address className="text-muted-foreground text-sm leading-relaxed not-italic" dangerouslySetInnerHTML={{ __html: t("contactPage.companyAddress") }} />
+                <address className="text-muted-foreground text-sm leading-relaxed not-italic" dangerouslySetInnerHTML={{ __html: "677/4 T.S-1 S. No. 301, Railway Road, GURU NANAKPURA,Doraha, Ludhiana, Punjab, 141421" }} />
               </div>
             </div>
 
@@ -400,19 +463,19 @@ const Contact = () => {
               {/* ... your existing contact info JSX ... */}
               <div>
                 <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground mb-6">
-                  {t("contactPage.contactInfoTitle")}
+                  Contact Information
                 </h2>
                 <p className="text-muted-foreground mb-8">
-                  {t("contactPage.contactInfoDescription")}
+                  Reach out to us through any of the following channels. Our team is ready to assist you with all your queries.
                 </p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-6">
                 {[
-                  { icon: Phone, title: t("contactPage.contactMethods.phone.title"), details: ["+91 96503 05025"] },
-                  { icon: Mail, title: t("contactPage.contactMethods.email.title"), details: ["hello@honeyman.in", "support@honeyman.in"] },
-                  { icon: MapPin, title: t("contactPage.contactMethods.address.title"), details: [t("contactPage.contactMethods.address.details.0"), t("contactPage.contactMethods.address.details.1")] },
-                  { icon: Clock, title: t("contactPage.contactMethods.hours.title"), details: [t("contactPage.contactMethods.hours.details.0")] },
+                  { icon: Phone, title: "Phone", details: ["+91 96503 05025"] },
+                  { icon: Mail, title: "Email", details: ["hello@honeyman.in", "support@honeyman.in"] },
+                  { icon: MapPin, title: "Address", details: ["HONEYMAN Gurgaon office", "Unit No. 106, First Floor, IRIS Tech Park, Sector – 48,Gurugram – Sohna Road, Gurugram – 122018"] },
+                  { icon: Clock, title: "Business Hours", details: ["Mon - Sun: 10:00 AM - 7:00 PM"] },
                 ].map((info, index) => (
                   <div 
                     key={index}
@@ -452,17 +515,17 @@ const Contact = () => {
         <div className="bg-gradient-to-r from-honey to-honey-dark py-16 px-8 flex items-center justify-center">
           <div className="text-center max-w-md">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
-              {t("contactPage.storeLocator.title")}
+              Find a Honeyman Store
             </h2>
             <h3 className="font-display text-2xl md:text-3xl font-bold text-black mb-4">
-              {t("contactPage.storeLocator.subtitle")}
+              Near You
             </h3>
             <div className="w-20 h-1 bg-black mx-auto mb-6"></div>
             <p className="text-black/80 mb-8 text-lg">
-              {t("contactPage.storeLocator.description")}
+              Locate your nearest store and enjoy our honey-based delights with ease.
             </p>
-            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/franchise#store-locator'}>
-              {t("contactPage.storeLocator.button")}
+            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/store-locator'}>
+              Store Locator
             </button>
           </div>
         </div>
@@ -471,17 +534,17 @@ const Contact = () => {
         <div className="bg-gradient-to-br from-orange-200 to-yellow-100 py-16 px-8 flex items-center justify-center">
           <div className="text-center max-w-md">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
-              {t("contactPage.exploreRange.title")}
+              Explore Our Range
             </h2>
             <h3 className="font-display text-2xl md:text-3xl font-bold text-black mb-4">
-              {t("contactPage.exploreRange.subtitle")}
+              of Honey-Based Products
             </h3>
             <div className="w-20 h-1 bg-black mx-auto mb-6"></div>
             <p className="text-black/80 mb-8 text-lg">
-              {t("contactPage.exploreRange.description")}
+              Discover the full ecosystem of refined sugar-free products, sweetened only with natural honey.
             </p>
             <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/products'}>
-              {t("contactPage.exploreRange.button")}
+              view Now
             </button>
           </div>
         </div>

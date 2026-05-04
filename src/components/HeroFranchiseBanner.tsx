@@ -18,7 +18,7 @@ const HeroFranchiseBanner = () => {
       <div className="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-between">
         <div className="w-full lg:w-1/2 text-white mb-16 lg:mb-0">
           <span className="text-amber-400 font-extrabold uppercase tracking-widest text-sm mb-4 block drop-shadow-md">
-            <i className="fas fa-check-circle mr-2" /> 160+ SUCCESSFUL STORES
+            <i className="fas fa-check-circle mr-2" /> 180+ SUCCESSFUL STORES
           </span>
           <p className="text-xl md:text-2xl text-white mb-6 font-semibold leading-relaxed drop-shadow-md">
             <span className="border-l-4 border-amber-500 pl-4 py-1 block bg-black/20 rounded-r-lg">
@@ -38,7 +38,7 @@ const HeroFranchiseBanner = () => {
           <div className="flex flex-col space-y-4 text-gray-100 mb-10 drop-shadow-md">
             <div className="flex items-center">
               <i className="fas fa-hexagon text-amber-400 mr-3" />
-              <span className="font-medium text-lg">3 Investment Models from ₹3.2 Lakhs</span>
+              <span className="font-medium text-lg">3 Investment Models from 4 Lakhs</span>
             </div>
             <div className="flex items-center">
               <i className="fas fa-hexagon text-amber-400 mr-3" />
@@ -55,7 +55,7 @@ const HeroFranchiseBanner = () => {
               Calculate Your Investment &rarr;
             </button> */}
             <Link
-              to="https://honeymanstore.com/wp-content/uploads/2026/02/Honeyman-1.pdf"
+              to="https://honeymanstore.com/wp-content/uploads/2026/04/Honeyman_Franchise.pdf"
               className="bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-xl transition flex items-center justify-center shadow-xl transform hover:-translate-y-1"
             >
               Download Brochure
@@ -69,7 +69,7 @@ const HeroFranchiseBanner = () => {
               <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">Cities</span>
             </div>
             <div className="rounded-full w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center text-center shadow-2xl border-4 border-white bg-gradient-to-br from-amber-100 to-yellow-200">
-              <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">160+</span>
+              <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">180+</span>
               <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">Outlets</span>
             </div>
             <div className="rounded-full w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center text-center shadow-2xl border-4 border-white bg-gradient-to-br from-amber-100 to-yellow-200">

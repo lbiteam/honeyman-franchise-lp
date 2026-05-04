@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -14,9 +13,37 @@ const zohoRefreshToken = import.meta.env.VITE_ZOHO_REFRESH_TOKEN;
 const supabase =
   supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
+const DEFAULT_COUNTRY_CODE = "+91";
+
+const DIALING_CODES: { value: string; label: string }[] = [
+  { value: "+91", label: "India (+91)" },
+  { value: "+1", label: "United States (+1)" },
+  { value: "+44", label: "United Kingdom (+44)" },
+  { value: "+971", label: "UAE (+971)" },
+  { value: "+966", label: "Saudi Arabia (+966)" },
+  { value: "+974", label: "Qatar (+974)" },
+  { value: "+965", label: "Kuwait (+965)" },
+  { value: "+973", label: "Bahrain (+973)" },
+  { value: "+968", label: "Oman (+968)" },
+  { value: "+65", label: "Singapore (+65)" },
+  { value: "+60", label: "Malaysia (+60)" },
+  { value: "+61", label: "Australia (+61)" },
+  { value: "+86", label: "China (+86)" },
+  { value: "+81", label: "Japan (+81)" },
+];
+
+function formatFullPhone(countryCode: string, localPhone: string): string {
+  const cc = countryCode.trim();
+  const local = localPhone.replace(/\s/g, "").trim();
+  if (!cc && !local) return "";
+  if (!local) return cc;
+  return `${cc} ${local}`;
+}
+
 interface BannerFormData {
   name: string;
   email: string;
+  countryCode: string;
   phone: string;
   city: string;
   preferredModel: string;
@@ -57,12 +84,12 @@ const labelClass =
   "text-xs font-bold text-amber-600 uppercase tracking-wide";
 
 const FranchiseBannerForm = () => {
-  const { t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<BannerFormData>({
     name: "",
     email: "",
+    countryCode: DEFAULT_COUNTRY_CODE,
     phone: "",
     city: "",
     preferredModel: "",
@@ -80,7 +107,7 @@ const FranchiseBannerForm = () => {
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
       toast({
-        title: t("contactPage.toast.requiredFields"),
+        title: "Please fill required fields",
         description: "Please enter your name, email and phone number.",
         variant: "destructive",
       });
@@ -89,12 +116,15 @@ const FranchiseBannerForm = () => {
 
     if (!supabaseUrl || !supabaseKey) {
       toast({
-        title: t("contactPage.toast.configError"),
-        description: t("contactPage.toast.configErrorDesc"),
+        title: "Configuration Error",
+        description: "Contact form is not properly configured. Please try again later.",
         variant: "destructive",
       });
       return;
     }
+
+    const countryCode = formData.countryCode.trim() || DEFAULT_COUNTRY_CODE;
+    const fullPhone = formatFullPhone(countryCode, formData.phone);
 
     const subject = formData.preferredModel
       ? `Franchise - ${formData.preferredModel}`
@@ -104,7 +134,7 @@ const FranchiseBannerForm = () => {
     const payload: ContactPayload = {
       name: formData.name.trim(),
       email: formData.email.trim(),
-      phone: formData.phone.trim(),
+      phone: fullPhone,
       location: formData.city.trim() || "",
       subject,
       message,
@@ -144,28 +174,41 @@ const FranchiseBannerForm = () => {
       }
 
       if (supabaseSuccess || zohoSuccess) {
-        setFormData({ name: "", email: "", phone: "", city: "", preferredModel: "" });
+        setFormData({
+          name: "",
+          email: "",
+          countryCode: DEFAULT_COUNTRY_CODE,
+          phone: "",
+          city: "",
+          preferredModel: "",
+        });
         navigate("/thank-you");
         return;
       } else {
         toast({
-          title: t("contactPage.toast.error") || "Submission Error",
+          title: "Submission Error",
           description:
             errors.length > 0
               ? errors.join("; ")
-              : t("contactPage.toast.errorDesc") || "Failed to submit. Please try again.",
+              : "Failed to submit. Please try again.",
           variant: "destructive",
           duration: 5000,
         });
-        setFormData({ name: "", email: "", phone: "", city: "", preferredModel: "" });
+        setFormData({
+          name: "",
+          email: "",
+          countryCode: DEFAULT_COUNTRY_CODE,
+          phone: "",
+          city: "",
+          preferredModel: "",
+        });
       }
     } catch (err: unknown) {
       console.error("Form submission error:", err);
       toast({
-        title: t("contactPage.toast.error") || "Error",
+        title: "Error",
         description:
           (err as Error)?.message ||
-          t("contactPage.toast.errorDesc") ||
           "An unexpected error occurred.",
         variant: "destructive",
       });
@@ -219,16 +262,35 @@ const FranchiseBannerForm = () => {
           <label className={labelClass}>
             Phone Number <span className="text-red-500">*</span>
           </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            maxLength={20}
-            required
-            placeholder="+91 1234567890"
-            className={inputClass}
-          />
+          <div className="flex gap-2">
+            <label htmlFor="franchiseCountryCode" className="sr-only">
+              Country code
+            </label>
+            <select
+              id="franchiseCountryCode"
+              name="countryCode"
+              value={formData.countryCode}
+              onChange={handleChange}
+              required
+              className="shrink-0 w-[min(11rem,42vw)] sm:w-40 px-3 py-3 mt-1 rounded-xl bg-amber-50/50 border border-amber-100 focus:border-amber-500 focus:bg-white focus:ring-0 transition text-gray-900 text-sm"
+            >
+              {DIALING_CODES.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              maxLength={15}
+              required
+              placeholder="1234567890"
+              className={`${inputClass} min-w-0 flex-1`}
+            />
+          </div>
         </div>
         <div>
           <label className={labelClass}>City</label>
@@ -251,9 +313,9 @@ const FranchiseBannerForm = () => {
             className={`${inputClass} text-gray-700`}
           >
             <option value="">Select model</option>
-            <option value="Ice Cream Cart (₹3.20L)">Ice Cream Cart (₹3.2L)</option>
-            <option value="Ice Cream Parlour (₹8-15L)">Ice Cream Parlour (₹8-15L)</option>
-            <option value="Cafe Honeyman (₹21-25L)">Cafe Honeyman (₹21-25L)</option>
+            <option value="Ice Cream Cart (₹3.20L)">Ice Cream Cart (₹4L)</option>
+            <option value="Ice Cream Parlour (₹8-15L)">Ice Cream Parlour (₹15-20L)</option>
+            <option value="Cafe Honeyman (₹21-25L)">Cafe Honeyman (₹25-30L)</option>
           </select>
         </div>
         <button

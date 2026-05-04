@@ -171,7 +171,7 @@ const PrivacyPolicy = () => (
           </p>
           <ul className="list-disc pl-6 space-y-1 text-foreground/90">
             <li>By email: <a href="mailto:hello@honeyman.in" className="text-amber-700 hover:underline font-medium">hello@honeyman.in</a></li>
-            <li>By visiting this page on our website: <a href="https://honeyman.in/contact-us" className="text-amber-700 hover:underline font-medium">https://honeyman.in/contact-us</a></li>
+              
           </ul>
         </section>
       </article>

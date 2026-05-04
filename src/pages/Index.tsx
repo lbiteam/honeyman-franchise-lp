@@ -17,6 +17,7 @@ import Footer from "@/components/Footer";
 import FranchiseSection from "@/components/FranchiseSection";
 import HoneymanStoreSection from "@/components/HoneymanStoreSection";
 import RecentBlogs from "@/components/RecentBlogs";
+import StoreLocatorSimple from "@/components/StoreLocatorSimple";
 
 // Commented out: previous home sections (gifting, franchise, store, icecream, honey, etc.)
 // import Header from "@/components/Header";
@@ -36,10 +37,10 @@ const Index = () => {
   const { hash } = useLocation();
 
   useEffect(() => {
-    if (hash === "#franchise-form") {
-      const el = document.getElementById("franchise-form");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (!hash) return;
+    const targetId = hash.replace("#", "");
+    const el = document.getElementById(targetId);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   }, [hash]);
 
   return (
@@ -55,7 +56,8 @@ const Index = () => {
         <OuroutletsGallery />
         <PartnerSuccessStoriesSection />
         {/* <RecentBlogs /> */}
-        <HoneymanStoreSection />
+        {/* <StoreLocatorSimple id="store-locator" /> */}
+        {/* <HoneymanStoreSection /> */}
         <FAQSection />
       
         <ReadyToStartSection />

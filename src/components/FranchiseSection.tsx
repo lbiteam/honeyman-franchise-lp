@@ -29,7 +29,7 @@ const modelMeta: Record<
   basic: {
     name: "Ice Cream Cart",
     tagline: "Affordable Investment",
-    investment: "₹2.75 - 3.2L",
+    investment: "₹4L",
     cardFeatures: [
       "Custom branded cart",
       "Basic product range",
@@ -46,7 +46,7 @@ const modelMeta: Record<
   medium: {
     name: "Ice Cream Parlour",
     tagline: "Mid-size Investment",
-    investment: "₹8-15L",
+    investment: "₹15-20L",
     cardFeatures: [
       "Flagship parlour setup",
       "Premium interior design",
@@ -65,7 +65,7 @@ const modelMeta: Record<
   bigger: {
     name: "Cafe Honeyman",
     tagline: "Premium Investment",
-    investment: "₹21-25L",
+    investment: "₹25-30L",
     cardFeatures: [
       "Full product range",
       "Territory exclusivity",
@@ -269,7 +269,7 @@ const FranchiseSection = () => {
                     <ul className="list-disc pl-5 space-y-1">
                       <li>
                         <strong>The power of the Honeyman brand:</strong> Step into a rapidly expanding network of
-                        160+ successful outlets with ready brand trust.
+                        180+ successful outlets with ready brand trust.
                       </li>
                       <li>
                         <strong>Low investment, high margins:</strong> Avoid heavy rentals and fit‑outs for a faster

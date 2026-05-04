@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Bee from "@/components/Bee";
-import { useLanguage } from "@/contexts/LanguageContext";
 import elanphoto1 from "@/assets/cafe-1.webp";
 import elanphoto2 from "@/assets/cafe-hm.webp";
 import elanphoto3 from "@/assets/cafe-image.webp";
@@ -33,7 +32,6 @@ const getImagesPerView = () => {
 };
 
 const OuroutletsGallery = () => {
-  const { t } = useLanguage();
   const [outletCarouselIndex, setOutletCarouselIndex] = useState(0);
   const [responsiveImagesPerView, setResponsiveImagesPerView] = useState(4);
 
@@ -66,7 +64,7 @@ const OuroutletsGallery = () => {
   const maxIndex = Math.max(0, outletImages.length - responsiveImagesPerView);
 
   return (
-    <section className="py-24 bg-white relative overflow-x-hidden overflow-y-visible">
+    <section id="gallery" className="py-24 bg-white relative overflow-x-hidden overflow-y-visible">
       <Bee className="absolute top-12 right-8 z-10" size={32} />
       <Bee className="absolute bottom-20 left-12 z-10" size={28} />
       <Bee className="absolute top-1/2 right-1/4 z-10" size={26} />
@@ -74,11 +72,11 @@ const OuroutletsGallery = () => {
       <div className="container mx-auto px-6 relative z-20">
         <div className="text-center mb-12 sm:mb-16">
           <span className="inline-block px-3 sm:px-4 py-2 bg-honey/20 rounded-full text-honey-dark font-medium text-xs sm:text-sm mb-4">
-            {t("franchisePage.outletsGallery.badge")}
+            Our Outlets
           </span>
-          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl uppercase tracking-wide mb-3">{t("franchisePage.outletsGallery.title")}</h2>
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl uppercase tracking-wide mb-3">Our Outlets Gallery</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
-            {t("franchisePage.outletsGallery.description")}
+            Discover our beautifully designed outlets across the country
           </p>
         </div>
 

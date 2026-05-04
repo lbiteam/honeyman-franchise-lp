@@ -91,7 +91,7 @@ const WeSetYouUpSection = () => {
   return (
     <section
       className="py-16 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${honeyBg})` }}
+      style={{ backgroundImage: `url(${honeyBg})` }} id="about-us"  
     >
       <div className="absolute inset-0 bg-[#f6ebd8]/85" aria-hidden />
       {/* Bees */}
@@ -133,7 +133,7 @@ const WeSetYouUpSection = () => {
           <img
             src={cafe3dModel}
             alt="Cafe Honeyman"
-            className="w-96 sm:w-96 flex-shrink-0 drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] animate-float order-first lg:order-none"
+            className="w-96 sm:w-96 flex-shrink-0 drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] animate-float order-first lg:order-none mx-auto"
           />
 
           <div className="flex flex-col gap-5 flex-1 w-full lg:max-w-[280px] min-w-0 items-center lg:items-stretch">

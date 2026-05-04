@@ -21,7 +21,7 @@
      "S.No": 4,
      "City": "Raipur",
      "Region": "Chattisgarh",
-     "Address": "A-12, youth and hub, NIT chowpaty, Amanaka, Raipur, Chhattisgarh. (492001)"
+     "Address": "A-12, youth and hub, NIT chowpaty, Amanaka, Raipur, Chattisgarh. (492001)"
    },
    {
      "S.No": 5,
@@ -122,7 +122,7 @@
    {
      "S.No": 21,
      "City": "Paonta Sahib",
-     "Region": "Himanchal Pradesh",
+     "Region": "Himachal Pradesh",
      "Address": "Dinesh S Plaza, Devinagar Road, Near Vishwakarma chowk, Infront of Pundir Juice Centre, Paonta Sahib\n"
    },
    {
@@ -133,7 +133,7 @@
    },
    {
      "S.No": 23,
-     "City": "Bengaluru",
+     "City": "Bangalore",
      "Region": "Karnataka",
      "Address": "Cafe Zaara, 2nd Floor, UB City, Vittal Mallya Road, Bengaluru. 560001"
    },
@@ -339,26 +339,26 @@
    {
      "S.No": 58,
      "City": "Haldwani",
-     "Region": "Uttrakhand",
+     "Region": "Uttarakhand",
      "Address": "Chandramauli Group, 38, Ward 12, Shankar Hospital , Rampur Road, Haldwani"
    },
    {
      "S.No": 59,
      "City": "Haldwani",
-     "Region": "Uttrakhand",
+     "Region": "Uttarakhand",
      "Address": "D58 Chandramauli Group, 38, Ward 12, Shankar Hospital , Rampur Road, Haldwani "
    },
    {
      "S.No": 60,
      "City": "Kashipur",
-     "Region": "Uttrakhand",
-     "Address": "Shop no 1, Katoratal Road, Kashipur (Uttrakhand)"
+     "Region": "Uttarakhand",
+     "Address": "Shop no 1, Katoratal Road, Kashipur (Uttarakhand)"
    },
    {
      "S.No": 61,
      "City": "Vikas Nagar",
-     "Region": "Uttrakhand",
-     "Address": "Scooffle, Near Sanguine Public School, Dehradoon (Uttrakhand)"
+     "Region": "Uttarakhand",
+     "Address": "Scooffle, Near Sanguine Public School, Dehradoon (Uttarakhand)"
    },
    {
      "S.No": 62,
@@ -371,5 +371,123 @@
      "City": "South 24 Parganas",
      "Region": "West Bengal",
      "Address": "10/48, Paraui das Para Road, Nabapally 10th lane, Sarsoona, PO:-Sarsoona, Dist:- South 24 Parganas, WB:-0700061"
+   },
+   {
+    "S.No": 64, 
+    "City": "Rohini",
+    "Region": "Delhi",
+    "Address": "Shop no 7,Ground floor,CSC-4,Sector-2,Rohini,Delhi"
+   }, {
+    "S.No": 65,  
+    "City": "Hisar",
+    "Region": "Haryana",
+    "Address": "Shop No- 05,  New Grain Market, Opposite Sector -14 Gate No -02, Sirsa Road, Hisar-125001"
+  
+   },
+   {
+    "S.No": 66,  
+    "City":         "Bangalore",
+    "Region": "Karnataka",
+    "Address": "V V Arcade, 1st Main Road, AECS Layout, ITPL Main Rd, B Block, Kundalahalli, Brookefield, Bengaluru, Karnataka 560037"
+  
+   },
+   {
+    "S.No": 67,  
+    "City":  "Bangalore",
+    "Region": "Karnataka",
+    "Address": "Neeladiri road, 1st Cross Rd, Concorde Silicon Valley, Electronic City Phase I, Doddathoguru, Bengaluru, Karnataka 560100"
+  
+   },
+   {
+    "S.No": 68,  
+    "City":  "Bhopal",
+    "Region": "Madhya Pradesh",
+    "Address": "Shop 2, AARYA complex ,Plot no. 80/1 , near mantar restaurant and shahpura thana , bawadia kala main road , bawadia kala , bhopal (mp) - 462039"
+  
+   },
+   {
+    "S.No": 69,  
+    "City":  "Nanded",
+    "Region": "Maharashtra",
+    "Address": "Gurudwara Road, Yatri Niwas Rd, Nanded, Maharashtra 431601 , bawadia kala , bhopal (mp) - 462039"
+  
+   },
+   {
+    "S.No": 70,  
+    "City":  "Thane (ulhasnagar)",
+    "Region": "Maharashtra",
+    "Address": "shop no 4 heera Panna society goal maidan opp nirankari hall ulhasnagar 2 421002"
+  
+   },
+   {
+    "S.No": 71,  
+    "City":  "Nanded",
+    "Region": "Maharashtra",
+    "Address": "Hotel Aapla 7/12,Purna Road, Pokharni Nanded-431601"
+  
+   },
+   {
+    "S.No": 72,  
+    "City":  "Nanded",
+    "Region": "Maharashtra",
+    "Address": "Ground floor Lakshya Building, next to Union Bank of India and Sharda Construction Office, Bhagya Nagar road, Ashok Nagar Nanded - 431605"
+  
+   },
+   {
+    "S.No": 73,  
+    "City":  "Aurangabad",
+    "Region": "Maharashtra",
+    "Address": "Peace Apartment,Gat no. 42,Nasik Road,Padegaon,Chh.Sambhajinagar (Aurangabad)"
+  
+   },
+   {
+    "S.No": 74,
+    "City": "Sangrur",
+    "Region": "Punjab",
+    "Address": " Grocery Point, Maharaja Ranjit Singh Colony, Street No. 5, Barnala Road, Badrukhan, Sangrur (Pb.) 148001"
+   },{
+    "S.No": 75,
+    "City": "Sangrur",
+    "Region": "Punjab",
+    "Address": "s/o Bakhtaur  Singh bakshiwala,Sangrur , punjab - 148028"
+   },
+   {
+    "S.No": 77,
+    "City": "GURDASPUR ",
+    "Region": "Punjab",
+    "Address": "H. No 90/91 Ward no 22 model town tehsil district Pathankot  Gurdaspur , Punjab 145001"
+   },
+   {
+    "S.No": 78  ,
+   
+    "City": "Haldwani",
+    "Region": "Uttarakhand",
+    "Address": "Floor No.: NEAR MAHILA DEGREE COLLEGE Building No./Flat No.: MALLA GORAKHPUR Name Of Premises/Building: BHAGWATI NIWAS Road/Street: Nawabi Road Nearby Landmark: Mother Girls Hostel Locality/Sub Locality: Subhash Nagar"
+   },
+   {
+    "S.No": 79 ,
+   
+    "City": "Moradabad",
+    "Region": "Uttar Pradesh",
+    "Address": "Astha Medicare,Reti street Lal masjid road Moradabad 244001"
+   }, 
+   {
+    "S.No": 80 ,
+   
+    "City": "Ghaziabad",
+    "Region": "Uttar Pradesh",
+    "Address": "Vasundhara (Ghaziabad)"
+   },
+   {
+    "S.No": 81 ,
+   
+    "City": "Sonbhadra",
+    "Region": "Uttar Pradesh",
+    "Address": "Dala bazar, dala pnb bank,petrahi, dalla,sonbhadra, up"
    }
+   
+   
  ]
+ 
+   
+ 

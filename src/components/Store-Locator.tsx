@@ -342,7 +342,7 @@ const StoreLocator = ({ id }: StoreLocatorProps) => {
     <section 
       ref={sectionRef}
       id={id} 
-      className="relative pt-28 pb-12 md:pt-32 lg:pt-40 md:pb-24 bg-cream" 
+      className="relative pt-16 pb-10 md:pt-20 md:pb-14 bg-cream" 
       style={{ scrollMarginTop: '140px' }}
     >
       <style>{`
@@ -623,7 +623,7 @@ const StoreLocator = ({ id }: StoreLocatorProps) => {
               </div>
 
               {/* Map Panel - SIMPLIFIED */}
-              <div className="flex-1 relative bg-gray-100 min-h-[400px] sm:min-h-[450px] lg:min-h-[600px] rounded-r-2xl lg:rounded-r-2xl rounded-l-2xl lg:rounded-l-none overflow-hidden w-full">
+              <div className="flex-1 relative bg-gray-100 min-h-[320px] sm:min-h-[360px] lg:min-h-[420px] rounded-r-2xl lg:rounded-r-2xl rounded-l-2xl lg:rounded-l-none overflow-hidden w-full">
                 <MapContainer
                   center={initialCenter}
                   zoom={allStoreLocations.length > 1 ? 5 : 15}

@@ -2,21 +2,16 @@ import { Link, useLocation } from "react-router-dom";
 import Bee from "./Bee";
 import honeyDipper from "@/assets/honey-dipper.webp";
 import logo from "@/assets/Honeyman-logo.webp";
-import { Instagram, Facebook, Youtube, Twitter } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Instagram, Facebook, Youtube } from "lucide-react";
 
 const Footer = () => {
-  const { t } = useLanguage();
   const isGiftingPage = useLocation().pathname === "/gifting";
 
   const footerLinks = [
-    { name: t("footer.store"), href: "/products" },
-    { name: t("footer.aboutUs"), href: "/about-us" },
-    { name: t("footer.franchise"), href: "/franchise" },
-    { name: t("footer.gifting"), href: "/gifting" },
-    { name: t("footer.privacyPolicy"), href: "/privacy-policy" },
-    { name: t("footer.storeLocator"), href: "/franchise#store-locator" },
-    { name: t("footer.contactUs"), href: "/contact-us" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Contact Us", href: "/contact-us" },
+    // Store locator – kept commented out
+    // { name: "Store Locator", href: "/franchise#store-locator" },
   ];
 
   const socialLinks = [
@@ -75,19 +70,19 @@ const Footer = () => {
               </Link>
               {/* Tagline - visible on mobile, below logo */}
               <p className="text-white font-display text-sm md:hidden font-medium text-center">
-                {t("footer.tagline")}
+                The House of Premium Products
               </p>
             </div>
 
             {/* Tagline - centered on desktop */}
             <p className="hidden md:block text-white font-display text-lg font-semibold text-center md:col-start-2">
-              {t("footer.tagline")}
+              The House of Premium Products
             </p>
 
             {/* Follow Us - Right Side */}
             <div className="flex flex-col items-center md:items-end gap-3 md:col-start-3">
               <h4 className="font-display text-lg font-semibold text-white">
-                {t("footer.followUs")}
+                Follow Us
               </h4>
               <div className="flex gap-3">
                 {socialLinks.map((link, index) => (
@@ -142,7 +137,7 @@ const Footer = () => {
       <div className="py-4 bg-[#f9dc8d]">
         <div className="container mx-auto px-6">
           <p className="text-center text-[#2a1810] text-xs md:text-sm font-medium">
-            {t("footer.copyright")}
+            © 2026 Honeyman Foods Private Limited. All rights reserved.
           </p>
         </div>
       </div>
