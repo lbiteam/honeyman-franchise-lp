@@ -197,7 +197,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
               )}
 
               {/* Coming Soon */}
-              <h3 className="font-bold text-orange-700 text-base mb-2">Close Deal (Coming Soon)</h3>
+              <h3 className="font-bold text-orange-700 text-base mb-2">Coming Soon</h3>
               {comingSoon.length === 0 ? (
                 <p className="text-muted-foreground text-sm">No coming soon deals for this state.</p>
               ) : (
