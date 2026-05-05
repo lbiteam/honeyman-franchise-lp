@@ -543,7 +543,7 @@ const Contact = () => {
             <p className="text-black/80 mb-8 text-lg">
               Discover the full ecosystem of refined sugar-free products, sweetened only with natural honey.
             </p>
-            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/products'}>
+            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = 'https://honeymanstore.com'}>
               view Now
             </button>
           </div>
