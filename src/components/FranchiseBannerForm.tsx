@@ -313,9 +313,9 @@ const FranchiseBannerForm = () => {
             className={`${inputClass} text-gray-700`}
           >
             <option value="">Select model</option>
-            <option value="Ice Cream Cart (₹3.20L)">Ice Cream Cart (₹4L)</option>
-            <option value="Ice Cream Parlour (₹8-15L)">Ice Cream Parlour (₹15-20L)</option>
-            <option value="Cafe Honeyman (₹21-25L)">Cafe Honeyman (₹25-30L)</option>
+            <option value="Ice Cream Cart (₹4L)">Ice Cream Cart (₹4L)</option>
+            <option value="Ice Cream Parlour (₹15-20L)">Ice Cream Parlour (₹15-20L)</option>
+            <option value="Cafe Honeyman (₹25-30L)">Cafe Honeyman (₹25-30L)</option>
           </select>
         </div>
         <button
