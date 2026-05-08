@@ -21,7 +21,7 @@ const DIALING_CODES: { value: string; label: string }[] = [
   { value: "+44", label: "United Kingdom (+44)" },
   { value: "+971", label: "UAE (+971)" },
   { value: "+966", label: "Saudi Arabia (+966)" },
-  { value: "+974", label: "Qatar (+974)" },
+  { value: "+974", label: "Qatar (+974)" }, 
   { value: "+965", label: "Kuwait (+965)" },
   { value: "+973", label: "Bahrain (+973)" },
   { value: "+968", label: "Oman (+968)" },

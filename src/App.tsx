@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import StoreLocatorPage from "./pages/StoreLocatorPage";
 import ThankYou from "./pages/ThankYou";
+import Expo from "./pages/Expo";
 
 // Store locator – kept commented out (no route)
 // import StoreLocator from "./components/Store-Locator";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/store-locator" element={<StoreLocatorPage />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            {/* <Route path="/expo" element={<Expo />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

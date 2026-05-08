@@ -31,7 +31,7 @@ const HeroFranchiseBanner = () => {
               className=" block font-display text-yellow-400 text-4xl md:text-5xl lg:text-[64px] Tracking-wide drop-shadow-lg "
               style={{ textShadow: "0 3px 16px rgba(0,0,0,0.18)" }}
             >
-              OWN A HONEYMAN FRANCHISE
+              OWN A HONEYMAN ICECREAM FRANCHISE
             </span>
           </div>
         
@@ -70,14 +70,14 @@ const HeroFranchiseBanner = () => {
             </div>
             <div className="rounded-full w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center text-center shadow-2xl border-4 border-white bg-gradient-to-br from-amber-100 to-yellow-200">
               <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">180+</span>
-              <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">Outlets</span>
+              <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">Live+Signed</span>
             </div>
             <div className="rounded-full w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center text-center shadow-2xl border-4 border-white bg-gradient-to-br from-amber-100 to-yellow-200">
               <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">17+</span>
               <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">States</span>
             </div>
             <div className="rounded-full w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center text-center shadow-2xl border-4 border-white bg-gradient-to-br from-amber-100 to-yellow-200">
-              <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">15 -18</span>
+              <span className="text-xl sm:text-2xl font-bold leading-none text-amber-900">12 - 18</span>
               <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-amber-900 uppercase">Payback</span>
             </div>
           </div>

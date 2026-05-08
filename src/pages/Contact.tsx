@@ -284,21 +284,29 @@ const Contact = () => {
   // [Keep all your existing JSX code below]
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
-      
-      {/* Hero Section - Keep your existing JSX */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-secondary to-background relative overflow-hidden">
-        {/* ... your existing JSX ... */}
+
+      {/* Hero Section */}
+      <section className="pt-24 pb-10 sm:pt-32 sm:pb-14 bg-gradient-to-b from-secondary to-background relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-3">
+            Get in <span className="text-primary">Touch</span>
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
+            Have a question or want to start your franchise journey? We&apos;d
+            love to hear from you.
+          </p>
+        </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-16">
+      <section className="py-10 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+
             {/* Contact Form */}
-            <div className="bg-card rounded-2xl p-8 shadow-soft">
+            <div className="bg-card rounded-2xl p-5 sm:p-8 shadow-soft">
               <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground mb-6">
                 Send us a Message
               </h2>
@@ -339,43 +347,40 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <span className="block text-sm font-medium text-foreground mb-2">
-                      Phone <span className="text-destructive">*</span>
-                    </span>
-                    <div className="flex gap-2">
-                      <label htmlFor="contactCountryCode" className="sr-only">
-                        Country code
-                      </label>
-                      <select
-                        id="contactCountryCode"
-                        name="countryCode"
-                        value={formData.countryCode}
-                        onChange={handleChange}
-                        required
-                        className="shrink-0 w-[min(11rem,42vw)] sm:w-40 px-3 py-3 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      >
-                        {DIALING_CODES.map(({ value, label }) => (
-                          <option key={value} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        maxLength={10}
-                        required
-                        className="min-w-[300px] flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="1234567890"
-                      />
-                    </div>
+                <div>
+                  <span className="block text-sm font-medium text-foreground mb-2">
+                    Phone <span className="text-destructive">*</span>
+                  </span>
+                  <div className="flex gap-2 w-full">
+                    <label htmlFor="contactCountryCode" className="sr-only">
+                      Country code
+                    </label>
+                    <select
+                      id="contactCountryCode"
+                      name="countryCode"
+                      value={formData.countryCode}
+                      onChange={handleChange}
+                      required
+                      className="shrink-0 w-24 sm:w-40 px-2 sm:px-3 py-3 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    >
+                      {DIALING_CODES.map(({ value, label }) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      maxLength={10}
+                      required
+                      className="min-w-0 flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      placeholder="1234567890"
+                    />
                   </div>
-                  
                 </div>
                 <div>
                     <label htmlFor="location" className="block text-sm font-medium text-foreground mb-2">
@@ -450,43 +455,42 @@ const Contact = () => {
               </form>
               
               {/* Company Address */}
-              <div className="mt-8 bg-card rounded-lg p-6 shadow-soft">
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
+              <div className="mt-8 bg-card rounded-lg p-5 sm:p-6 shadow-soft">
+                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-3 sm:mb-4 break-words">
                   Honeyman Foods Pvt. Ltd.
                 </h3>
-                <address className="text-muted-foreground text-sm leading-relaxed not-italic" dangerouslySetInnerHTML={{ __html: "677/4 T.S-1 S. No. 301, Railway Road, GURU NANAKPURA,Doraha, Ludhiana, Punjab, 141421" }} />
+                <address className="text-muted-foreground text-sm leading-relaxed not-italic break-words" dangerouslySetInnerHTML={{ __html: "677/4 T.S-1 S. No. 301, Railway Road, GURU NANAKPURA,Doraha, Ludhiana, Punjab, 141421" }} />
               </div>
             </div>
 
-            {/* Keep your Contact Info section exactly as it was */}
-            <div className="space-y-8">
-              {/* ... your existing contact info JSX ... */}
+            {/* Contact Info section */}
+            <div className="space-y-6 sm:space-y-8">
               <div>
-                <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground mb-6">
+                <h2 className="font-display text-2xl md:text-3xl font-medium text-foreground mb-4 sm:mb-6">
                   Contact Information
                 </h2>
-                <p className="text-muted-foreground mb-8">
+                <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8">
                   Reach out to us through any of the following channels. Our team is ready to assist you with all your queries.
                 </p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {[
                   { icon: Phone, title: "Phone", details: ["+91 96503 05025"] },
                   { icon: Mail, title: "Email", details: ["hello@honeyman.in", "support@honeyman.in"] },
                   { icon: MapPin, title: "Address", details: ["HONEYMAN Gurgaon office", "Unit No. 106, First Floor, IRIS Tech Park, Sector – 48,Gurugram – Sohna Road, Gurugram – 122018"] },
                   { icon: Clock, title: "Business Hours", details: ["Mon - Sun: 10:00 AM - 7:00 PM"] },
                 ].map((info, index) => (
-                  <div 
+                  <div
                     key={index}
-                    className="bg-card rounded-xl p-6 shadow-soft hover:shadow-honey transition-shadow duration-300"
+                    className="bg-card rounded-xl p-5 sm:p-6 shadow-soft hover:shadow-honey transition-shadow duration-300 min-w-0"
                   >
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                       <info.icon className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="font-semibold text-foreground mb-2">{info.title}</h3>
                     {info.details.map((detail, i) => (
-                      <p key={i} className="text-muted-foreground text-sm">{detail}</p>
+                      <p key={i} className="text-muted-foreground text-sm break-words">{detail}</p>
                     ))}
                   </div>
                 ))}
@@ -497,7 +501,8 @@ const Contact = () => {
                 <iframe
                   title="Honeyman Foods Location"
                   width="100%"
-                  height="400"
+                  height="300"
+                  className="block w-full h-[260px] sm:h-[360px] md:h-[400px]"
                   style={{ border: 0 }}
                   loading="lazy"
                   src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d65501.87132426831!2d77.0392392!3d28.4183872!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d233662c2b4f1%3A0xf0f85bfc0d1005b5!2sHoneyman%20Foods%20Pvt.%20Ltd!5e1!3m2!1sen!2sin!4v1765800965824!5m2!1sen!2sin"
@@ -512,38 +517,38 @@ const Contact = () => {
       {/* Store Locator & Franchise CTA */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-0">
         {/* Store Locator */}
-        <div className="bg-gradient-to-r from-honey to-honey-dark py-16 px-8 flex items-center justify-center">
+        <div className="bg-gradient-to-r from-honey to-honey-dark py-12 sm:py-16 px-5 sm:px-8 flex items-center justify-center">
           <div className="text-center max-w-md">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4">
               Find a Honeyman Store
             </h2>
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-black mb-4">
+            <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-black mb-3 sm:mb-4">
               Near You
             </h3>
-            <div className="w-20 h-1 bg-black mx-auto mb-6"></div>
-            <p className="text-black/80 mb-8 text-lg">
+            <div className="w-16 sm:w-20 h-1 bg-black mx-auto mb-5 sm:mb-6"></div>
+            <p className="text-black/80 mb-6 sm:mb-8 text-base sm:text-lg">
               Locate your nearest store and enjoy our honey-based delights with ease.
             </p>
-            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/store-locator'}>
+            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-6 sm:px-8 py-3 text-xs sm:text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = '/store-locator'}>
               Store Locator
             </button>
           </div>
         </div>
 
         {/* Franchise CTA */}
-        <div className="bg-gradient-to-br from-orange-200 to-yellow-100 py-16 px-8 flex items-center justify-center">
+        <div className="bg-gradient-to-br from-orange-200 to-yellow-100 py-12 sm:py-16 px-5 sm:px-8 flex items-center justify-center">
           <div className="text-center max-w-md">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4">
               Explore Our Range
             </h2>
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-black mb-4">
+            <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-black mb-3 sm:mb-4">
               of Honey-Based Products
             </h3>
-            <div className="w-20 h-1 bg-black mx-auto mb-6"></div>
-            <p className="text-black/80 mb-8 text-lg">
+            <div className="w-16 sm:w-20 h-1 bg-black mx-auto mb-5 sm:mb-6"></div>
+            <p className="text-black/80 mb-6 sm:mb-8 text-base sm:text-lg">
               Discover the full ecosystem of refined sugar-free products, sweetened only with natural honey.
             </p>
-            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-8 py-3 text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = 'https://honeymanstore.com'}>
+            <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold px-6 sm:px-8 py-3 text-xs sm:text-sm uppercase tracking-wider transition-colors rounded-2xl" onClick={() => window.location.href = 'https://honeymanstore.com'}>
               view Now
             </button>
           </div>
