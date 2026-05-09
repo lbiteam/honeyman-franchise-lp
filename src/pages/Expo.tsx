@@ -12,7 +12,7 @@ import ChaiPlusFranchiseSection from "@/components/ChaiPlusFranchiseSection";
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxUqoxoVt6lsq_1C_WCK76-KLFHiw0ojqcnEDLkJOeKub9rJtVzQMMIYAqC07LG92Kskg/exec";
 
 /* ─── types ─────────────────────────────────────────────── */
-type LeadForm = { name: string; phone: string; email: string; city: string; invest: string; msg: string };
+type LeadForm = { name: string; phone: string; email: string; city: string; modal: string; invest: string; msg: string };
 type ReviewForm = { name: string; message: string; stall: number; product: number };
 
 /* ─── Stars Component ────────────────────────────────────── */
@@ -35,7 +35,7 @@ const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) 
 
 /* ─── Main Component ─────────────────────────────────────── */
 const Expo = () => {
-  const [lead, setLead] = useState<LeadForm>({ name: "", phone: "", email: "", city: "", invest: "", msg: "" });
+  const [lead, setLead] = useState<LeadForm>({ name: "", phone: "", email: "", city: "", modal: "", invest: "", msg: "" });
   const [review, setReview] = useState<ReviewForm>({ name: "", message: "", stall: 0, product: 0 });
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,7 +56,7 @@ const Expo = () => {
 
   const handleLead = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!lead.invest) { toast.error("Please select an investment range."); return; }
+    if (!lead.modal || !lead.invest) { toast.error("Please select a modal and investment range."); return; }
 
     setSubmitting(true);
     try {
@@ -68,7 +68,7 @@ const Expo = () => {
       });
 
       toast.success(`Thank you, ${lead.name}! Your slot is confirmed — our team will call within 24 hrs.`);
-      setLead({ name: "", phone: "", email: "", city: "", invest: "", msg: "" });
+      setLead({ name: "", phone: "", email: "", city: "", modal: "", invest: "", msg: "" });
     } catch (err) {
       console.error("Lead submission failed:", err);
       toast.error("Something went wrong. Please try again or call us directly.");
@@ -208,12 +208,24 @@ const Expo = () => {
                     <input type="text" required placeholder="Your city" value={lead.city} onChange={e => setLead(p => ({ ...p, city: e.target.value }))} />
                   </div>
                   <div className="ex-field">
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#3a2d12", marginBottom: 6, letterSpacing: ".04em", textTransform: "uppercase" }}>Modal Type</label>
+                    <select required value={lead.modal} onChange={e => setLead(p => ({ ...p, modal: e.target.value }))}>
+                      <option value="">Select range</option>
+                      <option>Ice Cream</option>
+                      <option>Chai Plus</option>
+                     
+                   
+                    </select>
+                  </div>
+                  <div className="ex-field">
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#3a2d12", marginBottom: 6, letterSpacing: ".04em", textTransform: "uppercase" }}>Investment Range</label>
                     <select required value={lead.invest} onChange={e => setLead(p => ({ ...p, invest: e.target.value }))}>
                       <option value="">Select range</option>
-                      <option>₹4-5 Lakhs</option>
-                      <option>₹15 – 20 Lakhs</option>
-                      <option>₹25 – 30 Lakhs</option>
+                      <option>₹4 - 10 Lakhs</option>
+                      <option>₹10 – 20 Lakhs</option>
+                      <option>₹20 – 30 Lakhs</option>
+                    
+                     
                    
                     </select>
                   </div>
