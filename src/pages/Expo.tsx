@@ -6,6 +6,10 @@ import Footer from "@/components/Footer";
 import cafeTrailer from "@/assets/franchise-trailor.webp";
 import cafeKiosk from "@/assets/Honey-chai-cafe.webp";
 import cafeOutlet from "@/assets/franchise/ice-cream-parlour.webp";
+import ChaiPlusFranchiseSection from "@/components/ChaiPlusFranchiseSection";
+
+/* ─── Google Apps Script Endpoint ─────────────────────────── */
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxUqoxoVt6lsq_1C_WCK76-KLFHiw0ojqcnEDLkJOeKub9rJtVzQMMIYAqC07LG92Kskg/exec";
 
 /* ─── types ─────────────────────────────────────────────── */
 type LeadForm = { name: string; phone: string; email: string; city: string; invest: string; msg: string };
@@ -33,6 +37,7 @@ const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) 
 const Expo = () => {
   const [lead, setLead] = useState<LeadForm>({ name: "", phone: "", email: "", city: "", invest: "", msg: "" });
   const [review, setReview] = useState<ReviewForm>({ name: "", message: "", stall: 0, product: 0 });
+  const [submitting, setSubmitting] = useState(false);
 
   /* Reveal-on-scroll */
   useEffect(() => {
@@ -49,11 +54,27 @@ const Expo = () => {
     return () => io.disconnect();
   }, []);
 
-  const handleLead = (e: React.FormEvent) => {
+  const handleLead = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!lead.invest) { toast.error("Please select an investment range."); return; }
-    toast.success(`Thank you, ${lead.name}! Your slot is confirmed — our team will call within 24 hrs.`);
-    setLead({ name: "", phone: "", email: "", city: "", invest: "", msg: "" });
+
+    setSubmitting(true);
+    try {
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lead),
+      });
+
+      toast.success(`Thank you, ${lead.name}! Your slot is confirmed — our team will call within 24 hrs.`);
+      setLead({ name: "", phone: "", email: "", city: "", invest: "", msg: "" });
+    } catch (err) {
+      console.error("Lead submission failed:", err);
+      toast.error("Something went wrong. Please try again or call us directly.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleReview = (e: React.FormEvent) => {
@@ -69,6 +90,7 @@ const Expo = () => {
     .ex-field input:focus,.ex-field select:focus,.ex-field textarea:focus{outline:none;border-color:#CB6E17;box-shadow:0 0 0 3px rgba(240,180,41,.25)}
     .ex-submit{width:100%;background:#1B1407;color:#FADB5F;padding:14px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;border:none;font-family:inherit;transition:background .2s}
     .ex-submit:hover{background:#CB6E17;color:#FFF8E6}
+    .ex-submit:disabled{opacity:.6;cursor:not-allowed}
     .ex-map iframe{display:block;width:100%;height:280px;border:0;filter:saturate(.9)}
     .ex-social-link:hover{transform:translateY(-2px)}
     .ex-trailer-shot:hover{transform:translateY(-4px)}
@@ -130,12 +152,12 @@ const Expo = () => {
               </span>
 
               <h1 style={{ fontFamily: display, fontWeight: 900, fontSize: "clamp(38px,5.5vw,72px)", lineHeight: .98, letterSpacing: "-.025em", color: CREAM, marginBottom: 22 }}>
-                India's first <em style={{ fontStyle: "italic", fontWeight: 600, color: HONEY400 }}>honey-sweetened</em> chai &amp; cafe.<br />
+                India's first <em style={{ fontStyle: "display", fontWeight: 600, color: HONEY400 }}>honey-sweetened</em> chai &amp; cafe.<br />
                 Now opening doors to franchise partners.
               </h1>
 
               <p style={{ fontSize: 18, color: "rgba(255,248,230,.88)", maxWidth: 560, marginBottom: 32 }}>
-                Join us at Franchise India 2026 Expo — taste our chai, ice cream and bee-based products, and discover what 40+ years of pure honey heritage looks like as a business opportunity.
+                Join us at Franchise India 2026 Expo — taste our chai, ice cream and bee-based products, and discover what 46+ years of pure honey heritage looks like as a business opportunity.
               </p>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 36 }}>
@@ -156,10 +178,7 @@ const Expo = () => {
                   Be Part of the Journey
                   <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                 </a>
-                <a href="#expo-trailer" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "16px 28px", borderRadius: 999, fontWeight: 700, fontSize: 15, background: "transparent", color: CREAM, border: "1.5px solid rgba(255,248,230,.7)", textDecoration: "none" }}>
-                  <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><path d="M9 22V12h6v10" /></svg>
-                  See the Trailer Model
-                </a>
+                
               </div>
             </div>
 
@@ -192,10 +211,10 @@ const Expo = () => {
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#3a2d12", marginBottom: 6, letterSpacing: ".04em", textTransform: "uppercase" }}>Investment Range</label>
                     <select required value={lead.invest} onChange={e => setLead(p => ({ ...p, invest: e.target.value }))}>
                       <option value="">Select range</option>
-                      <option>₹5 – 10 Lakhs</option>
-                      <option>₹10 – 25 Lakhs</option>
-                      <option>₹25 – 50 Lakhs</option>
-                      <option>₹50 Lakhs+</option>
+                      <option>₹4-5 Lakhs</option>
+                      <option>₹15 – 20 Lakhs</option>
+                      <option>₹25 – 30 Lakhs</option>
+                   
                     </select>
                   </div>
                 </div>
@@ -203,7 +222,9 @@ const Expo = () => {
                   <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#3a2d12", marginBottom: 6, letterSpacing: ".04em", textTransform: "uppercase" }}>Message (optional)</label>
                   <textarea rows={2} placeholder="Tell us when you'd like to visit" value={lead.msg} onChange={e => setLead(p => ({ ...p, msg: e.target.value }))} />
                 </div>
-                <button type="submit" className="ex-submit">Confirm My Slot →</button>
+                <button type="submit" className="ex-submit" disabled={submitting}>
+                  {submitting ? "Submitting..." : "Confirm My Slot →"}
+                </button>
                 <p style={{ marginTop: 14, fontSize: 12, color: "#3a2d12", textAlign: "center" }}>Free chai &amp; ice cream tasting at the booth — on us. 🍯</p>
               </form>
             </aside>
@@ -221,65 +242,7 @@ const Expo = () => {
         {/* ═══════════════════════════════════════════
             TRAILER MODEL
         ═══════════════════════════════════════════ */}
-        <section id="expo-trailer" style={{ padding: "90px 24px", background: CREAM }}>
-          <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-            <span className="ex-reveal" style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: ".18em", textTransform: "uppercase", color: HONEY700, marginBottom: 14 }}>The Trailer Model</span>
-            <h2 className="ex-reveal" style={{ fontFamily: display, fontWeight: 800, fontSize: "clamp(32px,4.5vw,54px)", lineHeight: 1.05, letterSpacing: "-.02em", color: INK, marginBottom: 18 }}>
-              Meet the <em style={{ fontStyle: "italic", color: HONEY700 }}>Honeyman Chai+</em> trailer — a franchise on wheels.
-            </h2>
-            <p className="ex-reveal" style={{ fontSize: 18, color: "#3a2d12", maxWidth: 680, marginBottom: 48 }}>
-              India's first honey-sweetened cafe in a complete mobile format. Plug-and-play setup, full kitchen, and a menu engineered for high-margin sales.
-            </p>
-
-            {/* Gallery */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
-              {/* Feature shot */}
-              <div className="ex-reveal ex-trailer-shot" style={{ gridColumn: "1 / -1", position: "relative", borderRadius: 24, overflow: "hidden", boxShadow: "0 20px 60px -20px rgba(203,110,23,.35)", transition: "transform .35s ease" }}>
-                <img src={cafeTrailer} alt="Honeyman Chai+ trailer" style={{ width: "100%", objectFit: "cover", aspectRatio: "21/10", display: "block" }} loading="lazy" />
-                <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, background: "linear-gradient(180deg, transparent 0%, rgba(27,20,7,.92) 70%)", padding: "80px 28px 24px" }}>
-                  <span style={{ display: "inline-block", background: HONEY400, color: INK, padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: ".12em", textTransform: "uppercase", marginBottom: 10 }}>Brand Story</span>
-                  <h4 style={{ fontFamily: display, fontWeight: 800, fontSize: 22, lineHeight: 1.15, marginBottom: 6, color: CREAM }}>Join the Global Revolution</h4>
-                  <p style={{ fontSize: 14, color: "rgba(255,248,230,.85)" }}>Branded exterior built around Honeyman's mission — zero refined sugar, only pure honey. 40+ years of trust, on display.</p>
-                </div>
-              </div>
-
-              {/* Shot 2 */}
-              <div className="ex-reveal ex-trailer-shot" style={{ position: "relative", borderRadius: 24, overflow: "hidden", boxShadow: "0 20px 60px -20px rgba(203,110,23,.35)", transition: "transform .35s ease" }}>
-                <img src={cafeKiosk} alt="Honeyman products range" style={{ width: "100%", objectFit: "cover", aspectRatio: "16/11", display: "block" }} loading="lazy" />
-                <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, background: "linear-gradient(180deg, transparent 0%, rgba(27,20,7,.92) 70%)", padding: "60px 24px 20px" }}>
-                  <span style={{ display: "inline-block", background: HONEY400, color: INK, padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: ".12em", textTransform: "uppercase", marginBottom: 8 }}>Product Range</span>
-                  <h4 style={{ fontFamily: display, fontWeight: 800, fontSize: 20, lineHeight: 1.15, marginBottom: 4, color: CREAM }}>World's Largest Honey-Based Menu</h4>
-                  <p style={{ fontSize: 13, color: "rgba(255,248,230,.85)" }}>Desi Chai, Ayurvedic Chai, English Chai, Boba Tea, Orange Chai, Kambocha Chai — six signature chais and growing.</p>
-                </div>
-              </div>
-
-              {/* Shot 3 */}
-              <div className="ex-reveal ex-trailer-shot" style={{ position: "relative", borderRadius: 24, overflow: "hidden", boxShadow: "0 20px 60px -20px rgba(203,110,23,.35)", transition: "transform .35s ease" }}>
-                <img src={cafeOutlet} alt="Honeyman full format cafe" style={{ width: "100%", objectFit: "cover", aspectRatio: "16/11", display: "block" }} loading="lazy" />
-                <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, background: "linear-gradient(180deg, transparent 0%, rgba(27,20,7,.92) 70%)", padding: "60px 24px 20px" }}>
-                  <span style={{ display: "inline-block", background: HONEY400, color: INK, padding: "4px 12px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: ".12em", textTransform: "uppercase", marginBottom: 8 }}>Full Format</span>
-                  <h4 style={{ fontFamily: display, fontWeight: 800, fontSize: 20, lineHeight: 1.15, marginBottom: 4, color: CREAM }}>Tea · Snacks · Beverages · Ice Cream</h4>
-                  <p style={{ fontSize: 13, color: "rgba(255,248,230,.85)" }}>Four product verticals in one mobile cafe. Built for footfall, designed for repeat customers.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Feature pills */}
-            <div className="ex-reveal" style={{ marginTop: 32, background: CREAM, border: `1.5px solid ${HONEY400}`, borderRadius: 20, padding: 24, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 24 }}>
-              {[
-                { title: "Plug & Play", sub: "Fully fitted unit — start within days" },
-                { title: "Branded Exterior", sub: "Eye-catching design that pulls customers" },
-                { title: "Compact Footprint", sub: "Mall, market, highway, campus — fits anywhere" },
-                { title: "Full Support", sub: "Training, supply chain & marketing handled" },
-              ].map(({ title, sub }) => (
-                <div key={title} style={{ paddingLeft: 18, borderLeft: `3px solid #F0B429` }}>
-                  <strong style={{ fontFamily: display, fontWeight: 800, fontSize: 16, color: INK, display: "block" }}>{title}</strong>
-                  <span style={{ fontSize: 13, color: "#3a2d12" }}>{sub}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+       <ChaiPlusFranchiseSection />
 
         {/* ═══════════════════════════════════════════
             ABOUT THE EXPO
@@ -352,14 +315,14 @@ const Expo = () => {
             <div className="ex-reveal">
               <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: ".18em", textTransform: "uppercase", color: HONEY700, marginBottom: 14 }}>Why Honeyman</span>
               <h2 style={{ fontFamily: display, fontWeight: 800, fontSize: "clamp(32px,4.5vw,54px)", lineHeight: 1.05, letterSpacing: "-.02em", color: INK, marginBottom: 18 }}>
-                A 40-year honey legacy. Now, a franchise opportunity.
+                A 46-year honey legacy. Now, a franchise opportunity.
               </h2>
               <p style={{ fontSize: 17, color: "#3a2d12", marginBottom: 32 }}>
                 Since 1984, Honeyman has been delivering pure, unadulterated honey across India. Today we're scaling that trust into India's largest range of honey &amp; bee-based products — partnering with franchisees who believe in clean, refined-sugar-free living.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 32 }}>
                 {[
-                  { title: "40+ Years Heritage", sub: "Trusted purity since 1984, now backed by a national franchise system." },
+                  { title: "46+ Years Heritage", sub: "Trusted purity since 1984, now backed by a national franchise system." },
                   { title: "Quick Setup", sub: "End-to-end onboarding, training, supply & marketing from day one." },
                   { title: "High-Margin Category", sub: "Honey-led products command premium pricing in a fast-growing wellness market." },
                   { title: "Brand You Can Trust", sub: "Recognised & loved by lakhs of customers across India." },
@@ -370,14 +333,14 @@ const Expo = () => {
                   </div>
                 ))}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, padding: 28, background: INK, borderRadius: 20, color: CREAM }}>
+              {/* <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, padding: 28, background: INK, borderRadius: 20, color: CREAM }}>
                 {[["40+", "Years of Purity"], ["100+", "Bee Products"], ["0", "Refined Sugar"]].map(([num, lbl]) => (
                   <div key={lbl} style={{ textAlign: "center" }}>
                     <div style={{ fontFamily: display, fontWeight: 900, fontSize: 42, color: HONEY300, lineHeight: 1 }}>{num}</div>
                     <div style={{ fontSize: 13, letterSpacing: ".06em", textTransform: "uppercase", marginTop: 6, opacity: .85 }}>{lbl}</div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
 
             {/* Menu card */}
@@ -420,7 +383,7 @@ const Expo = () => {
                 </div>
                 <div>
                   <p style={{ opacity: .85, marginBottom: 18, fontSize: 15 }}>Two activation zones — one for tasting, one for franchise discussions.</p>
-                  <a href="#expo-lead" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: CREAM, color: INK, padding: "14px 24px", borderRadius: 999, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Reserve a meeting →</a>
+                 
                 </div>
               </div>
 
@@ -478,10 +441,7 @@ const Expo = () => {
             <p className="ex-reveal" style={{ fontSize: 18, color: "#3a2d12", maxWidth: 600, margin: "0 auto 32px" }}>
               Walk into Stall C-3,4,5 or C-10,11,12 between 16–17 May, drop your name at the counter, and a scoop is on us. Then stay for the franchise pitch — or don't. Either way, the ice cream is yours.
             </p>
-            <a href="#expo-lead" className="ex-reveal" style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "16px 32px", borderRadius: 999, fontWeight: 700, fontSize: 15, background: INK, color: HONEY300, textDecoration: "none" }}>
-              Be a Part of Our Journey
-              <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
-            </a>
+           
           </div>
         </section>
 

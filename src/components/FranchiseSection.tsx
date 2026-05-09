@@ -29,7 +29,7 @@ const modelMeta: Record<
   basic: {
     name: "Ice Cream Cart",
     tagline: "Affordable Investment",
-    investment: "₹4L",
+    investment: "₹4-5L",
     cardFeatures: [
       "Custom branded cart",
       "Basic product range",

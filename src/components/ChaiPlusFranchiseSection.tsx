@@ -64,7 +64,7 @@ type MenuKey = "chai" | "bev" | "food";
 const menuData: Record<MenuKey, { name: string }[]> = {
   chai: [
     { name: "Desi Chai" },
-    { name: "English Chai" },
+    { name: "English Tea" },
     { name: "Herbal Chai" },
     { name: "Masala Cutting" },
     { name: "Saffron Kahwa" },

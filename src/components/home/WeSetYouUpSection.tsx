@@ -28,7 +28,7 @@ const includesItems = [
   { text: "Design and Interior", icon: iconDesignInterior },
   { text: "Marketing support", icon: iconMarketing },
   { text: "Logistics & supply chain", icon: iconLogistics },
-  { text: "POS system support", icon: iconPosSupport },
+  { text: "Swiggy & Zomato Onboarding", icon: iconPosSupport },
 ];
 
 const leftIncludeItems = includesItems.slice(0, 3);

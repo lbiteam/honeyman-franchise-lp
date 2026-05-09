@@ -81,13 +81,13 @@ const Header = () => {
                   Store-Locator
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link to="/expo" className="relative text-amber-700 hover:text-amber-500 transition font-extrabold">
                   Expo 2026
                   <span className="absolute -top-1.5 -right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
                   <span className="absolute -top-1.5 -right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full" />
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
 
@@ -131,9 +131,9 @@ const Header = () => {
             <Link to="/store-locator" className="font-bold text-gray-800 py-3 border-b border-amber-50" onClick={() => setMobileMenuOpen(false)}>
               Store
             </Link>
-            {/* <Link to="/expo" className="font-bold text-amber-700 py-3 border-b border-amber-50 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/expo" className="font-bold text-amber-700 py-3 border-b border-amber-50 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
               Expo 2026 <span className="w-2 h-2 bg-red-500 rounded-full inline-block" />
-            </Link> */}
+            </Link>
             <Link
               to="/contact-us"
               className="bg-gradient-to-br from-amber-400 to-amber-600 text-white font-bold py-3 px-4 rounded-full text-center mt-4 shadow-md"

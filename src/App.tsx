@@ -32,7 +32,7 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/store-locator" element={<StoreLocatorPage />} />
             <Route path="/thank-you" element={<ThankYou />} />
-            {/* <Route path="/expo" element={<Expo />} /> */}
+            <Route path="/expo" element={<Expo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

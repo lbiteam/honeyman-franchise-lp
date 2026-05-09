@@ -165,7 +165,7 @@ const ExpoInviteModal = () => {
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
               <button
                 type="button"
-                onClick={scrollToForm}
+                onClick={() => window.location.href = "/expo#expo-lead"}
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#d4a017] to-[#b88a12] px-5 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 Book a Meeting

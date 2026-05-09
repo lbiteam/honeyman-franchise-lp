@@ -49,7 +49,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-orange-50/30 overflow-x-hidden">
       {/* Floating Expo Button */}
-      {/* <Link
+      <Link
         to="/expo"
         className="fixed right-5 bottom-6 z-50 flex flex-col items-center gap-1.5 group"
         aria-label="Visit Franchise India Expo 2026 page"
@@ -66,14 +66,14 @@ const Index = () => {
         <span className="bg-amber-900 text-amber-100 text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide uppercase shadow-lg whitespace-nowrap opacity-90 group-hover:opacity-100 transition-opacity">
           Expo 2026
         </span>
-      </Link> */}
+      </Link>
 
       <Header />
       <ExpoInviteModal />
       <main>
         <HeroFranchiseBanner />
         <AvailableOnSection />
-        <ChaiPlusFranchiseSection />
+        {/* <ChaiPlusFranchiseSection /> */}
         <TrustBadgesSection />
         <FranchiseSection />
         <WeSetYouUpSection />

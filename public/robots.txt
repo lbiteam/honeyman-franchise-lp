@@ -16,4 +16,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://honeyman.in/sitemap.xml
+Sitemap: https://honeymanfranchise.com/sitemap.xml
