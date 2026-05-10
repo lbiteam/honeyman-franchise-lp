@@ -259,8 +259,8 @@ const Expo = () => {
         {/* ═══════════════════════════════════════════
             ABOUT THE EXPO
         ═══════════════════════════════════════════ */}
-        <section style={{ padding: "90px 24px", background: "linear-gradient(180deg,#FFF8E6 0%,#FFFBEA 100%)" }}>
-          <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 60, alignItems: "center" }}>
+        <section className="ex-about-section" style={{ padding: "90px 24px", background: "linear-gradient(180deg,#FFF8E6 0%,#FFFBEA 100%)" }}>
+          <div className="ex-about-grid" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 0.9fr)", gap: 60, alignItems: "center" }}>
             <div className="ex-reveal">
               <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: ".18em", textTransform: "uppercase", color: HONEY700, marginBottom: 14 }}>About the Event</span>
               <h2 style={{ fontFamily: display, fontWeight: 800, fontSize: "clamp(32px,4.5vw,54px)", lineHeight: 1.05, letterSpacing: "-.02em", color: INK, marginBottom: 18 }}>
@@ -291,7 +291,7 @@ const Expo = () => {
             </div>
 
             {/* Expo details card */}
-            <div className="ex-reveal" style={{ background: INK, color: CREAM, borderRadius: 24, padding: 36, boxShadow: "0 20px 60px -20px rgba(203,110,23,.35)", position: "relative", overflow: "hidden" }}>
+            <div className="ex-reveal ex-about-card" style={{ background: INK, color: CREAM, borderRadius: 24, padding: 36, boxShadow: "0 20px 60px -20px rgba(203,110,23,.35)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -60, right: -60, width: 240, height: 240, background: "radial-gradient(circle, rgba(247,201,72,.4), transparent 70%)", borderRadius: "50%" }} />
               <div style={{ marginBottom: 28, position: "relative" }}>
                 <span style={{ display: "inline-block", background: HONEY400, color: INK, padding: "6px 14px", borderRadius: 999, fontSize: 11, fontWeight: 700, letterSpacing: ".14em", textTransform: "uppercase", marginBottom: 16 }}>Franchise India 2026</span>
@@ -305,7 +305,7 @@ const Expo = () => {
                   ["Honeyman Stalls", "C-3,4,5 & C-10,11,12"],
                   ["Entry", "Free with prior registration"],
                 ].map(([key, val]) => (
-                  <div key={key} style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 16, padding: "14px 0", borderBottom: "1px solid rgba(255,248,230,.12)" }}>
+                  <div key={key} className="ex-expo-detail-row" style={{ display: "grid", gridTemplateColumns: "minmax(92px, 120px) minmax(0, 1fr)", gap: 16, padding: "14px 0", borderBottom: "1px solid rgba(255,248,230,.12)" }}>
                     <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,248,230,.6)", fontWeight: 700 }}>{key}</div>
                     <div style={{ fontFamily: display, fontWeight: 600, fontSize: 16, color: CREAM }}>{val}</div>
                   </div>
@@ -521,9 +521,14 @@ const Expo = () => {
         @keyframes exBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
         @media(max-width:960px){
           .ex-hero-grid{grid-template-columns:1fr!important;gap:40px!important}
+          .ex-about-grid{grid-template-columns:1fr!important;gap:40px!important}
           #expo-lead{order:2}
         }
         @media(max-width:768px){
+          .ex-about-section{padding-top:56px!important;padding-bottom:56px!important}
+          .ex-about-card{padding:24px!important;border-radius:20px!important}
+          .ex-expo-detail-row{grid-template-columns:1fr!important;gap:6px!important;padding:12px 0!important}
+          .ex-expo-detail-row > div:first-child{margin-bottom:2px}
           section > div > div[style*="grid-template-columns: 1.1fr"]{grid-template-columns:1fr!important;gap:36px!important}
           section > div > div[style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important;gap:36px!important}
           section > div > div[style*="grid-template-columns: 1.4fr"]{grid-template-columns:1fr!important;gap:28px!important}
