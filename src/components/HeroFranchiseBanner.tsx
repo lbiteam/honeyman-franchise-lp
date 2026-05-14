@@ -55,7 +55,7 @@ const HeroFranchiseBanner = () => {
               Calculate Your Investment &rarr;
             </button> */}
             <Link
-              to="https://honeymanstore.com/wp-content/uploads/2026/05/Franchise-PPT_compressed.pdf"
+              to="https://honeymanstore.com/wp-content/uploads/2026/05/Model-Franchise-PPT._compressed.pdf"
               className="bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-xl transition flex items-center justify-center shadow-xl transform hover:-translate-y-1"
             >
               Download Brochure
