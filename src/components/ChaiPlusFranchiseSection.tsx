@@ -503,16 +503,15 @@ const ChaiPlusFranchiseSection = () => {
             </div>
 
             {/* menu grid */}
-            <div className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              key={activeTab}
+              className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            >
               {menuData[activeTab].map((item, i) => (
                 <div
                   key={`${activeTab}-${item.name}`}
-                  className="group flex items-center gap-3.5 rounded-2xl border border-[#f3c042]/15 bg-[#fdf6e3]/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#d4a017] hover:bg-[#f3c042]/10"
-                  style={{
-                    animation: "fade-in 0.5s ease-out forwards",
-                    animationDelay: `${i * 60}ms`,
-                    opacity: 0,
-                  }}
+                  className="group flex animate-fade-in items-center gap-3.5 rounded-2xl border border-[#f3c042]/15 bg-[#fdf6e3]/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#d4a017] hover:bg-[#f3c042]/10"
+                  style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <Leaf
                     className="h-6 w-6 flex-shrink-0 text-[#7cb342]"
