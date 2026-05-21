@@ -44,7 +44,7 @@ const investmentTiers: InvestmentTier[] = [
     subtitle: "Cafe",
     tagline: "Most-chosen format for new owners",
     investment: "₹15L – 25L",
-    size: "200 – 350 sq ft",
+    size: "500 – 700 sq ft",
     featured: true,
     payback: "12 - 18 months",
   },
