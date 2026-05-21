@@ -93,7 +93,7 @@
      "S.No": 16,
      "City": "Gurgaon",
      "Region": "Haryana",
-     "Address": "JMD Suburbio 2, Sec 67 , Gurugram, (Haryana)"
+     "Address": "Sapphire Mall, 37B, Internal Walkway, Orchid Petals, Block S, Uppal Southend, Sector 49, Gurugram, Haryana 122018"
    },
    {
      "S.No": 17,
@@ -484,8 +484,37 @@
     "City": "Sonbhadra",
     "Region": "Uttar Pradesh",
     "Address": "Dala bazar, dala pnb bank,petrahi, dalla,sonbhadra, up"
+   },
+   {
+    "S.No": 82,
+     "City": "Feroz Pur",
+    "Region": "Punjab",
+    "Address": "15  B.D.O Market\nMalwa Road\nFerozPur city, Punjab-152002"
+   },{
+    "S.No": 83,
+     "City": "Imphal",
+    "Region": "Manipur",
+    "Address": "15  B.D.O Market\nMalwa Road\nFerozPur city, Punjab-152002"
+   },
+   {
+    "S.No": 84,
+     "City": "Sambhaji Nagar",
+    "Region": "Maharashtra",
+    "Address": "Shop No. 2, Tulsi Arcade Cidco, Chhatrapati Sambhajinagar Chhatrapati Sambhaji Nagar, MAHARASHTRA, 431003"
+   },
+   {
+    "S.No": 85,
+     "City": "Pune",
+    "Region": "Maharashtra",
+    "Address": "Shop No.1, Landmark society near EuroSchool, Undri, Pune, Maharashtra, 411060 "
+   },
+   {
+    "S.No": 86,
+     "City": "Ulhasnagar",
+    "Region": "Maharashtra",
+    "Address": "Shop.No.4, Sai Arcade, Netaji Chowk, ULHASNAGAR THANE MAHARASHTRA 421005 "
    }
-   
+
    
  ]
  

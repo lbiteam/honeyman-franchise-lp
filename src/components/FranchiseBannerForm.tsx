@@ -23,7 +23,7 @@ const DIALING_CODES: { value: string; label: string }[] = [
   { value: "+966", label: "Saudi Arabia (+966)" },
   { value: "+974", label: "Qatar (+974)" }, 
   { value: "+965", label: "Kuwait (+965)" },
-  { value: "+973", label: "Bahrain (+973)" },
+  { value: "+973", label: "Bahrain (+973)" },  
   { value: "+968", label: "Oman (+968)" },
   { value: "+65", label: "Singapore (+65)" },
   { value: "+60", label: "Malaysia (+60)" },
@@ -40,12 +40,28 @@ function formatFullPhone(countryCode: string, localPhone: string): string {
   return `${cc} ${local}`;
 }
 
+type ChooseModel = "Ice Cream" | "Chai Plus" | "";
+
+const PREFERRED_MODEL_OPTIONS: Record<Exclude<ChooseModel, "">, string[]> = {
+  "Ice Cream": [
+    "Ice Cream Cart (₹4-5L)",
+    "Ice Cream Parlour (₹15-20L)",
+    "Cafe Honeyman (₹25-30L)",
+  ],
+  "Chai Plus": [
+    "Chai Plus Express (₹5-8L)",
+    "Chai Plus Cafe (₹15-25L)",
+    " Chai PlusLounge (₹50L+)",
+  ],
+};
+
 interface BannerFormData {
   name: string;
   email: string;
   countryCode: string;
   phone: string;
   city: string;
+  chooseModel: ChooseModel;
   preferredModel: string;
 }
 
@@ -92,6 +108,7 @@ const FranchiseBannerForm = () => {
     countryCode: DEFAULT_COUNTRY_CODE,
     phone: "",
     city: "",
+    chooseModel: "",
     preferredModel: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,8 +116,22 @@ const FranchiseBannerForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "chooseModel") {
+      setFormData({
+        ...formData,
+        chooseModel: value as ChooseModel,
+        preferredModel: "",
+      });
+      return;
+    }
+    setFormData({ ...formData, [name]: value });
   };
+
+  const preferredModelOptions =
+    formData.chooseModel !== ""
+      ? PREFERRED_MODEL_OPTIONS[formData.chooseModel]
+      : [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,10 +157,23 @@ const FranchiseBannerForm = () => {
     const countryCode = formData.countryCode.trim() || DEFAULT_COUNTRY_CODE;
     const fullPhone = formatFullPhone(countryCode, formData.phone);
 
-    const subject = formData.preferredModel
-      ? `Franchise - ${formData.preferredModel}`
+    const franchiseLine = [
+      formData.chooseModel && `Brand: ${formData.chooseModel}`,
+      formData.preferredModel && `Preferred model: ${formData.preferredModel}`,
+    ]
+      .filter(Boolean)
+      .join(" | ");
+
+    const subject = franchiseLine
+      ? `Franchise - ${franchiseLine}`
       : "Franchise - Check Availability";
-    const message = `Preferred model: ${formData.preferredModel || "Not selected"}. City: ${formData.city || "Not provided"}.`;
+    const message = [
+      formData.chooseModel && `Choose model: ${formData.chooseModel}`,
+      formData.preferredModel && `Preferred model: ${formData.preferredModel}`,
+      `City: ${formData.city || "Not provided"}`,
+    ]
+      .filter(Boolean)
+      .join(". ");
 
     const payload: ContactPayload = {
       name: formData.name.trim(),
@@ -180,6 +224,7 @@ const FranchiseBannerForm = () => {
           countryCode: DEFAULT_COUNTRY_CODE,
           phone: "",
           city: "",
+          chooseModel: "",
           preferredModel: "",
         });
         navigate("/thank-you");
@@ -200,6 +245,7 @@ const FranchiseBannerForm = () => {
           countryCode: DEFAULT_COUNTRY_CODE,
           phone: "",
           city: "",
+          chooseModel: "",
           preferredModel: "",
         });
       }
@@ -305,17 +351,37 @@ const FranchiseBannerForm = () => {
           />
         </div>
         <div>
+          <label className={labelClass}>Choose Model</label>
+          <select
+            name="chooseModel"
+            value={formData.chooseModel}
+            onChange={handleChange}
+            className={`${inputClass} text-gray-700`}
+          >
+            <option value="" disabled>
+              Select brand
+            </option>
+            <option value="Ice Cream">Ice Cream</option>
+            <option value="Chai Plus">Chai Plus</option>
+          </select>
+        </div>
+        <div>
           <label className={labelClass}>Preferred Model</label>
           <select
             name="preferredModel"
             value={formData.preferredModel}
             onChange={handleChange}
-            className={`${inputClass} text-gray-700`}
+            disabled={!formData.chooseModel}
+            className={`${inputClass} text-gray-700 disabled:opacity-60 disabled:cursor-not-allowed`}
           >
-            <option value="">Select model</option>
-            <option value="Ice Cream Cart (₹4-5L)">Ice Cream Cart (₹4-5L)</option>
-            <option value="Ice Cream Parlour (₹15-20L)">Ice Cream Parlour (₹15-20L)</option>
-            <option value="Cafe Honeyman (₹25-30L)">Cafe Honeyman (₹25-30L)</option>
+            <option value="" disabled>
+              {formData.chooseModel ? "Select model" : "Select brand first"}
+            </option>
+            {preferredModelOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
           </select>
         </div>
         <button

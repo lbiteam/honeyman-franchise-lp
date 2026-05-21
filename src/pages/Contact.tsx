@@ -409,10 +409,10 @@ const Contact = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   >
-                    <option value="">Select a subject</option>
+                    <option value="" disabled selected>Select a subject</option>
                     <option value="general">General Inquiry</option>
                     <option value="franchise">Franchise Opportunity</option>
-                    <option value="corporate">Corporate gifting</option>
+                    
                     <option value="support">Support Request</option>
                   
                   
