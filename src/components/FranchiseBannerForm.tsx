@@ -348,6 +348,7 @@ const FranchiseBannerForm = () => {
             maxLength={100}
             placeholder="e.g. Mumbai, Delhi"
             className={inputClass}
+            required
           />
         </div>
         <div>
@@ -357,6 +358,7 @@ const FranchiseBannerForm = () => {
             value={formData.chooseModel}
             onChange={handleChange}
             className={`${inputClass} text-gray-700`}
+            required
           >
             <option value="" disabled>
               Select brand
@@ -373,6 +375,7 @@ const FranchiseBannerForm = () => {
             onChange={handleChange}
             disabled={!formData.chooseModel}
             className={`${inputClass} text-gray-700 disabled:opacity-60 disabled:cursor-not-allowed`}
+            required
           >
             <option value="" disabled>
               {formData.chooseModel ? "Select model" : "Select brand first"}

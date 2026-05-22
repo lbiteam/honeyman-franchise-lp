@@ -395,6 +395,7 @@ const Contact = () => {
                       maxLength={100}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                       placeholder="Your city or location"
+                      required
                     />
                   </div>
 
@@ -408,12 +409,13 @@ const Contact = () => {
                     value={formData.subject}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    required
                   >
                     <option value="" disabled selected>Select a subject</option>
                     <option value="general">General Inquiry</option>
                     <option value="franchise">Franchise Opportunity</option>
                     
-                    <option value="support">Support Request</option>
+                 
                   
                   
                   </select>
@@ -432,6 +434,7 @@ const Contact = () => {
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
                     placeholder="How can we help you?"
+                    required
                   />
                 </div>
                 
