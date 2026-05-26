@@ -51,7 +51,7 @@ const PREFERRED_MODEL_OPTIONS: Record<Exclude<ChooseModel, "">, string[]> = {
   "Chai Plus": [
     "Chai Plus Express (₹5-8L)",
     "Chai Plus Cafe (₹15-25L)",
-    " Chai PlusLounge (₹50L+)",
+    "Chai Plus Lounge (₹50L+)",
   ],
 };
 
@@ -72,6 +72,12 @@ interface ContactPayload {
   location: string;
   subject: string;
   message: string;
+  formType: "franchise";
+  countryCode: string;
+  phoneLocal: string;
+  city: string;
+  chooseModel: string;
+  preferredModel: string;
 }
 
 const createZohoLead = async (payload: ContactPayload): Promise<boolean> => {
@@ -182,6 +188,12 @@ const FranchiseBannerForm = () => {
       location: formData.city.trim() || "",
       subject,
       message,
+      formType: "franchise",
+      countryCode,
+      phoneLocal: formData.phone.trim(),
+      city: formData.city.trim(),
+      chooseModel: formData.chooseModel,
+      preferredModel: formData.preferredModel,
     };
 
     setIsSubmitting(true);
