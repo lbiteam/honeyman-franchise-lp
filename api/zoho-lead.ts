@@ -20,7 +20,7 @@ interface ZohoLeadPayload {
 
 function buildFranchiseDescription(data: ZohoLeadPayload): string {
   const lines = [
-    '--- Franchise Banner Form ---',
+    '--- Website Franchise Form ---',
     data.name && `Name: ${data.name.trim()}`,
     data.email && `Email: ${data.email.trim()}`,
     data.phone && `Phone (full): ${data.phone.trim()}`,
@@ -87,7 +87,7 @@ function resolveLeadStatus(data: ZohoLeadPayload): string {
 
 function resolveLeadSource(data: ZohoLeadPayload): string {
   if (data.formType === 'franchise') {
-    return 'Franchise Banner Form';
+    return 'Website Franchise Form';
   }
   return 'Website Contact Form';
 }
