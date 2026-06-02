@@ -19,6 +19,15 @@ const ReadyToStartSection = () => (
         <a
           href="tel:+919650305025"
           className="bg-transparent text-white px-10 py-5 rounded-full font-extrabold text-lg hover:bg-white/20 transition border-2 border-white w-full sm:w-auto text-center"
+          onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
+            dl.push({
+              event: "call_us_franchise",
+              event_category: "Franchise",
+              event_label: "Ready To Start – Call Us",
+            });
+          }}
         >
           <i className="fas fa-phone mr-2" /> Call Us
         </a>

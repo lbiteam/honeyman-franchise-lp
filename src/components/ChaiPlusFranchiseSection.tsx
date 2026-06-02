@@ -186,6 +186,15 @@ const ChaiPlusFranchiseSection = () => {
                 <Link
                   to="/#franchise-form"
                   className="inline-flex items-center justify-center rounded-xl border-2 border-[#0d3b2e] bg-white/70 px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-[#0d3b2e] backdrop-blur transition hover:bg-[#0d3b2e] hover:text-[#f3c042]"
+                  onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
+                    dl.push({
+                      event: "chaiplus_apply",
+                      event_category: "Franchise",
+                      event_label: "ChaiPlus – Apply Now",
+                    });
+                  }}
                 >
                   Apply Now
                 </Link>

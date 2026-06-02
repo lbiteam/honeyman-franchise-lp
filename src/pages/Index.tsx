@@ -16,7 +16,7 @@ import {
 } from "@/components/home";
 import Footer from "@/components/Footer";
 import FranchiseSection from "@/components/FranchiseSection";
-import HoneymanStoreSection from "@/components/HoneymanStoreSection";
+
 import RecentBlogs from "@/components/RecentBlogs";
 import StoreLocatorSimple from "@/components/StoreLocatorSimple";
 import ChaiPlusFranchiseSection from "@/components/ChaiPlusFranchiseSection";
