@@ -278,9 +278,14 @@ const FranchiseBannerForm = () => {
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(217,119,6,0.3)] p-8 w-full max-w-md relative z-10 border-t-8 border-amber-500">
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-extrabold text-gray-900">Check Availability</h3>
+        <p className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-1">
+          Free Franchise Brochure
+        </p>
+        <h3 className="text-2xl font-extrabold text-gray-900 leading-tight">
+          Enquire &amp; Unlock Your Brochure
+        </h3>
         <p className="text-gray-500 text-sm mt-2">
-          Get the detailed franchise brochure directly to your inbox.
+          Submit your details to instantly get the detailed franchise brochure &amp; our team will reach out to you.
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -409,7 +414,7 @@ const FranchiseBannerForm = () => {
           ) : (
             <>
               <Send className="w-4 h-4" />
-              Request Callback
+              Get Free Brochure
             </>
           )}
         </button>

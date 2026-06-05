@@ -28,15 +28,41 @@ const ThankYou = () => {
               ✓
             </span>
           </div>
-          <h1 className="font-display text-2xl md:text-3xl font-bold text-[#423324] mb-4">
-            You&apos;re Awesome!!
+          <h1 className="font-display text-2xl md:text-3xl font-bold text-[#423324] mb-3">
+            Enquiry Received!
           </h1>
-          <p className="text-gray-600 leading-relaxed mb-8">
-            Your message has been received. We&apos;ll get back to you faster than a caffeinated squirrel. In the meantime, feel free to explore more of our site.
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Thank you for your interest in a Honeyman Franchise. Our team will reach out to you shortly.
           </p>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
+            <p className="text-sm font-semibold text-amber-800 mb-3">
+              <i className="fas fa-file-pdf mr-2 text-amber-500" />
+              Your brochure is ready — download it now!
+            </p>
+            <a
+              href="https://honeymanstore.com/wp-content/uploads/2026/05/Model-Franchise-PPT._compressed.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
+                dl.push({
+                  event: "download_brochure_franchise",
+                  event_category: "Franchise",
+                  event_label: "Hero Banner – Download Brochure",
+                });
+              }}
+              className="inline-flex items-center gap-2 w-full justify-center px-6 py-3 bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white font-bold rounded-xl shadow-lg shadow-amber-400/30 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              <i className="fas fa-download" />
+              Download Franchise Brochure
+            </a>
+          </div>
+
           <Link
             to="/"
-            className="inline-block px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.45)] hover:-translate-y-0.5 transition-all duration-300"
+            className="inline-block px-8 py-3 bg-white border-2 border-amber-400 text-amber-600 font-semibold rounded-full hover:bg-amber-50 hover:-translate-y-0.5 transition-all duration-300"
           >
             Back to Homepage
           </Link>
