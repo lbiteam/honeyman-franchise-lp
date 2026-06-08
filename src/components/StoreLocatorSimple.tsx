@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapPin, Navigation, ChevronDown, ChevronUp } from "lucide-react";
 import storeLocatorImg from "@/assets/store-locator-img.webp";
+import modelIcon from "@/assets/franchise/MODEL-ICON.webp";
 
 type StoreOperative = {
   "S.No"?: number | string;
@@ -8,6 +9,7 @@ type StoreOperative = {
   Region?: string;
   State?: string;
   Address?: string;
+  Model?: string;
 };
 
 type ComingSoonStore = {
@@ -175,6 +177,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                     const city = store.City || "Unknown city";
                     const region = store.Region || store.State || "";
                     const address = store.Address || "";
+                    const model = store.Model || "";
                     const destination = [address, city, region].filter(Boolean).join(", ");
                     const href = getDirectionsUrl(destination);
                     const storeKey = store["S.No"] ?? `${city}-${idx}`;
@@ -185,6 +188,12 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                           <div>
                             <div className="font-bold text-foreground">Honeyman - {city}</div>
                             {region && <div className="text-muted-foreground text-sm mt-1">{region}</div>}
+                            {model && (
+                              <div className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 bg-honey/20 rounded-full w-fit">
+                                <img src={modelIcon} alt="model-icon" className="w-12 h-12 object-cover" />
+                                <span className="text-honey-dark text-base font-semibold">{model}</span>
+                              </div>
+                            )}
                             {address && (
                               <pre className="text-muted-foreground text-sm mt-2 whitespace-pre-wrap break-words font-sans">
                                 {address}
