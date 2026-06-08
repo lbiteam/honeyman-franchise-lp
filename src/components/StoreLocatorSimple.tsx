@@ -107,15 +107,26 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
           </p>
         </div>
 
+       
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="w-full bg-white">
               <img src={storeLocatorImg} alt="Store Locator Banner" className="w-full h-auto block select-none" />
             </div>
 
+            {/* <div className="p-6">
+              <div className=" flex flex-col-2  p-4  bg-honey/20 rounded-xl ">
+              <div className="flex flex-col items-center justify-center">
+              <label className="block text-sm font-medium text-muted-foreground mb-3 text-center text-bold text-honey-dark">Locate Near Me</label>
+              <p className="text-muted-foreground text-sm text-center">find the nearest operative store <br/> based on your location</p>
+              </div>
+              
+              </div>
+            </div> */}
+
             <div className="p-6">
   <label className="block text-sm font-medium text-muted-foreground mb-3">
-    State / Region
+    OR SELECT YOUR STATE / REGION
   </label>
 
   {/* 2-column accordion grid */}

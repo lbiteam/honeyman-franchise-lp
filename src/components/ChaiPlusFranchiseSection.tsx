@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import teaTransparent from "@/assets/tea transparent.webp";
 import chaiLogo from "@/assets/LOGO CHAI UPDATED  1NEW PNG (1).png";
+import bobaTeaVideo from "@/assets/8c6af69758524ba497d52870ec423cfc.webm";
 
 type InvestmentTier = {
   badge: string;
@@ -573,6 +574,142 @@ const ChaiPlusFranchiseSection = () => {
                 />
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* ============== BOBA TEA SPECIALTY (3D) ============== */}
+        <div className="mt-24 md:mt-28">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="font-display text-sm font-semibold tracking-[0.25em] text-[#d4a017]">
+                04 — SIGNATURE
+              </span>
+              <h3 className="mt-2 font-display text-3xl font-extrabold leading-none tracking-tight text-[#0d3b2e] sm:text-4xl lg:text-[44px]">
+                Our star: Honey Boba Tea
+              </h3>
+            </div>
+            <p className="max-w-sm text-sm text-[#1e7a4d] sm:text-right">
+              The bubble-tea craze, reimagined with pure honey. A high-margin,
+              Insta-worthy bestseller that keeps customers coming back.
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden rounded-[2rem] bg-[#5f7f3f]/90 to-[#155b3a]/40 p-8 shadow-[0_40px_80px_-30px_rgba(13,59,46,0.6)] sm:p-12">
+            {/* ambient glows */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(243,192,66,0.22), transparent 70%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(124,179,66,0.18), transparent 70%)",
+              }}
+            />
+
+            <div className="relative z-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+              {/* Left – 3D video stage */}
+              <div
+                className="relative flex items-center justify-center"
+                style={{ perspective: "1200px" }}
+              >
+                {/* halo + disc behind cup */}
+                <div
+                  aria-hidden
+                  className="absolute h-[300px] w-[300px] rounded-full bg-gradient-to-br from-[#1e7a4d]/40 via-[#155b3a]/20 to-transparent blur-3xl sm:h-[380px] sm:w-[380px]"
+                />
+                <div
+                  aria-hidden
+                  className="absolute h-[260px] w-[260px] rounded-full border-2 border-dashed border-[#f3c042]/50 sm:h-[220px] sm:w-[220px]"
+                />
+
+                {/* 3D tilting card */}
+                <div
+                  className="group relative animate-float [transform-style:preserve-3d] transition-transform duration-500 ease-out hover:[transform:rotateX(6deg)_rotateY(-12deg)]"
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <div className="relative overflow-hidden  rounded-[2rem] border border-[#1f5a45]/30 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] [transform:translateZ(30px)]">
+                    <video
+                      src={bobaTeaVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="h-[350px] w-[200px] object-cover sm:h-[400px] sm:w-[200px]"
+                    />
+                    {/* sheen overlay */}
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    />
+                  </div>
+
+                  {/* floating specialty chip – top */}
+                  {/* <div className="absolute -right-4 top-17 z-20 flex flex-col items-center justify-center rounded-2xl border-4 border-white bg-[#0D3B2E] px-4 py-2.5 text-center shadow-2xl [transform:translateZ(80px)]">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#0d3b2e]">
+                      Bestseller
+                    </span>
+                    <span className="font-display text-base font-extrabold leading-tight text-[#0d3b2e]">
+                      Boba Tea
+                    </span>
+                  </div> */}
+
+                  {/* floating specialty chip – bottom */}
+                  <div className="absolute -left-4 bottom-10 z-20 flex flex-col items-center justify-center rounded-2xl border-4 border-white bg-white px-4 py-2.5 text-center shadow-2xl [transform:translateZ(80px)]">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#1e7a4d]">
+                      Honey
+                    </span>
+                    <span className="font-display text-sm font-extrabold leading-tight text-[#0d3b2e]">
+                      Sweetened
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right – specialty highlights */}
+              <div className="text-[#fdf6e3]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#f3c042]/15 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#f3c042]">
+                  <CupSoda className="h-3.5 w-3.5" /> Specialty Beverage
+                </span>
+                <h4 className="mt-5 font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl">
+                  Chewy pearls, honey sweetness, zero refined sugar
+                </h4>
+                <p className="mt-4 text-sm leading-relaxed text-[#cfe6d8] sm:text-base">
+                Tiny pearls packed with fruity goodness.
+
+Every boba bursts the moment you bite into it, releasing a splash of delicious flavor that transforms every sip and spoonful into a fun experience.
+
+Add a pop of excitement to your favorite ice cream, shakes, waffles, smoothies, and beverages.
+                </p>
+
+                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {[
+                    { icon: TrendingUp, stat: "High", label: "Profit Margin" },
+                    { icon: Leaf, stat: "100%", label: "Natural Honey" },
+                    { icon: Award, stat: "Top", label: "Customer Pick" },
+                  ].map(({ icon: Icon, stat, label }) => (
+                    <div
+                      key={label}
+                      className="rounded-2xl border border-[#f3c042]/20 bg-[#fdf6e3]/5 px-4 py-4 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#d4a017] hover:bg-[#f3c042]/10"
+                    >
+                      <Icon className="mx-auto mb-2 h-6 w-6 text-[#f3c042]" />
+                      <div className="font-display text-lg font-extrabold text-white">
+                        {stat}
+                      </div>
+                      <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#9fcab4]">
+                        {label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
