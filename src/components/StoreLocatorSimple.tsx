@@ -37,7 +37,8 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
   const [error, setError] = useState<string | null>(null);
   const [storeOperatives, setStoreOperatives] = useState<StoreOperative[]>([]);
   const [comingSoonStores, setComingSoonStores] = useState<ComingSoonStore[]>([]);
-  const [openState, setOpenState] = useState<string | null>(null); // ← single open accordion
+  const [openState, setOpenState] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string>("All");
 
   useEffect(() => {
     const loadData = async () => {
@@ -60,17 +61,42 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
     loadData();
   }, []);
 
-  const availableStates = useMemo(() => {
-    const operativeStates = storeOperatives.map((s) => (s.Region || s.State || "").trim()).filter(Boolean);
-    const comingStates = comingSoonStores.map((s) => (s.State || "").trim()).filter(Boolean);
-    return Array.from(new Set([...operativeStates, ...comingStates].sort((a, b) => a.localeCompare(b))));
-  }, [storeOperatives, comingSoonStores]);
+  const allModels = useMemo(() => {
+    const models = storeOperatives
+      .map((s) => (s.Model || "").trim())
+      .filter(Boolean);
+    return Array.from(new Set(models)).sort((a, b) => a.localeCompare(b));
+  }, [storeOperatives]);
 
-  const getOperativesForState = (state: string) =>
-    storeOperatives.filter((s) => normalize(s.Region || s.State || "") === normalize(state));
+  const getOperativesForState = (state: string) => {
+    const matches = storeOperatives.filter(
+      (s) => normalize(s.Region || s.State || "") === normalize(state)
+    );
+    if (selectedModel === "All") return matches;
+    return matches.filter((s) => normalize(s.Model || "") === normalize(selectedModel));
+  };
 
   const getComingSoonForState = (state: string) =>
     comingSoonStores.filter((s) => normalize(s.State || "") === normalize(state));
+
+  const availableStates = useMemo(() => {
+    const filteredOperativeStates =
+      selectedModel === "All"
+        ? storeOperatives.map((s) => (s.Region || s.State || "").trim()).filter(Boolean)
+        : storeOperatives
+            .filter((s) => normalize(s.Model || "") === normalize(selectedModel))
+            .map((s) => (s.Region || s.State || "").trim())
+            .filter(Boolean);
+
+    const comingStates =
+      selectedModel === "All"
+        ? comingSoonStores.map((s) => (s.State || "").trim()).filter(Boolean)
+        : [];
+
+    return Array.from(
+      new Set([...filteredOperativeStates, ...comingStates].sort((a, b) => a.localeCompare(b)))
+    );
+  }, [storeOperatives, comingSoonStores, selectedModel]);
 
   if (isLoading) {
     return (
@@ -127,6 +153,38 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
             </div> */}
 
             <div className="p-6">
+  {/* Model filter pills */}
+  {/* <div className="mb-5">
+    <label className="block text-sm font-medium text-muted-foreground mb-3">
+      FILTER BY MODEL TYPE
+    </label>
+    <div className="flex flex-wrap gap-2">
+      {["All", ...allModels].map((model) => {
+        const active = selectedModel === model;
+        return (
+          <button
+            key={model}
+            type="button"
+            onClick={() => {
+              setSelectedModel(model);
+              setOpenState(null);
+            }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+              active
+                ? "bg-honey text-foreground border-honey shadow-sm"
+                : "bg-white text-gray-600 border-border hover:border-honey hover:text-honey-dark"
+            }`}
+          >
+            {model !== "All" && (
+              <img src={modelIcon} alt="" className="w-4 h-4 object-contain" />
+            )}
+            {model}
+          </button>
+        );
+      })}
+    </div>
+  </div> */}
+
   <label className="block text-sm font-medium text-muted-foreground mb-3">
     OR SELECT YOUR STATE / REGION
   </label>
@@ -216,7 +274,9 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                 </div>
               )}
 
-              {/* Coming Soon */}
+              {/* Coming Soon — hidden when a model filter is active */}
+              {selectedModel === "All" && (
+              <>
               <h3 className="font-bold text-orange-700 text-base mb-2">Coming Soon</h3>
               {comingSoon.length === 0 ? (
                 <p className="text-muted-foreground text-sm">No coming soon deals for this state.</p>
@@ -252,6 +312,8 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                     );
                   })}
                 </div>
+              )}
+              </>
               )}
             </div>
           )}

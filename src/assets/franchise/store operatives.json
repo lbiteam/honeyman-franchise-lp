@@ -11,7 +11,7 @@
     "City": "Rohini",
     "Region": "Delhi",
     "Address": "Cafe Rico, Sec 18, Rohini, Delhi",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 3,
@@ -284,7 +284,7 @@
     "City": "Kanpur",
     "Region": "Uttar Pradesh",
     "Address": "Near KDA Bazaar, Dr Chaudhary Building, Jajmau, Kanpur-208007",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 42,
@@ -319,14 +319,14 @@
     "City": "Kashipur",
     "Region": "Uttarakhand",
     "Address": "Shop no 1, Katoratal Road, Kashipur (Uttrakhand)",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 47,
     "City": "Vikas Nagar",
     "Region": "Uttarakhand",
     "Address": "Scooffle, Near Sanguine Public School, Dehradoon (Uttrakhand)",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 48,
@@ -340,7 +340,7 @@
     "City": "Haldwani",
     "Region": "Uttarakhand",
     "Address": "\"Chandramauli Group, 38, Ward 12, Shankar Hospital , Rampur Road, Haldwani\n\nhttps://share.google/EzdVGpwwBQCNp1tZo\"",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 50,
@@ -357,19 +357,13 @@
     "Model": "Distributionship"
   },
 
-  {
-    "S.No": 53,
-    "City": "Gandhidham",
-    "Region": "Gujarat",
-    "Address": "DC 5 , Plot no. 522, Adipur , Gandhidham , Kutch - 370205 (Gujarat)",
-    "Model": "Ice cream only"
-  },
+ 
   {
     "S.No": 54,
     "City": "Modasa",
     "Region": "Gujarat",
     "Address": "C-5/6 Vandemataram Commerce Hub, Bajkot, Shamlaji-Godhara Rode, Modasa Baypas, Modasa, PinCode 383315",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 55,
@@ -460,7 +454,7 @@
     "City": "Vishakhapatnam",
     "Region": "Andhra Pradesh",
     "Address": "Bharath Kumar,\n9908827300, 9703086123\nHangout Cafe, First floor Clubhouse, MVV and MK Park, Kurmanapalem, Visakhapatnam 530046\"",
-    "Model": "Ice cream only"
+    "Model": "Distributor"
   },
   {
     "S.No": 68,
@@ -601,5 +595,10 @@
     "Region": "Madhya Pradesh",
     "Address": "Shop 2, AARYA complex ,Plot no. 80/1 , near mantar restaurant and shahpura thana , bawadia kala main road , bawadia kala , bhopal (mp) - 462039",
     "Model": "Cart"
-  }
+  } 
+
+
+  
+
+  
 ]
