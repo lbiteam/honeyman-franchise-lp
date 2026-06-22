@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -100,6 +100,64 @@ const createZohoLead = async (payload: ContactPayload): Promise<boolean> => {
   }
 };
 
+/**
+ * Sales Max captures the submit event but crashes when it tries to
+ * JSON.stringify React-managed inputs (they carry __reactFiber props ->
+ * circular structure). So we hand it a clean, vanilla form with plain
+ * inputs that have no React fibers. Sales Max serializes it fine.
+ */
+function fireSalesMaxCapture(payload: ContactPayload) {
+  try {
+    const ghost = document.createElement("form");
+    ghost.setAttribute("aria-hidden", "true");
+    ghost.style.position = "absolute";
+    ghost.style.left = "-9999px";
+    ghost.style.top = "0";
+    ghost.style.width = "1px";
+    ghost.style.height = "1px";
+    ghost.style.overflow = "hidden";
+    ghost.style.opacity = "0";
+
+    const addField = (name: string, value: string, type = "text") => {
+      const input = document.createElement("input");
+      input.type = type;
+      input.name = name;
+      input.value = value || "";
+      ghost.appendChild(input);
+    };
+
+    // Field names mirror what Sales Max detects (name / email / phone etc.)
+    addField("name", payload.name);
+    addField("email", payload.email, "email");
+    addField("phone", payload.phone, "tel");
+    addField("city", payload.city);
+    addField("chooseModel", payload.chooseModel);
+    addField("preferredModel", payload.preferredModel);
+
+    const submitBtn = document.createElement("button");
+    submitBtn.type = "submit";
+    submitBtn.textContent = "Submit";
+    ghost.appendChild(submitBtn);
+
+    // Never let this hidden form actually navigate the page
+    ghost.addEventListener("submit", (e) => e.preventDefault());
+
+    document.body.appendChild(ghost);
+
+    // This is the exact event Sales Max hooks (proven by your console logs).
+    ghost.dispatchEvent(
+      new Event("submit", { bubbles: true, cancelable: true })
+    );
+
+    // Clean up the hidden form after Sales Max has read + sent it
+    window.setTimeout(() => {
+      if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+    }, 2000);
+  } catch (err) {
+    console.warn("Sales Max capture failed:", err);
+  }
+}
+
 const inputClass =
   "w-full px-4 py-3 mt-1 rounded-xl bg-amber-50/50 border border-amber-100 focus:border-amber-500 focus:bg-white focus:ring-0 transition text-gray-900 placeholder:text-gray-400";
 const labelClass = "text-xs font-bold text-amber-600 uppercase tracking-wide";
@@ -107,11 +165,6 @@ const labelClass = "text-xs font-bold text-amber-600 uppercase tracking-wide";
 const FranchiseBannerForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  // refs for Sales Max capture
-  const formRef = useRef<HTMLFormElement>(null);
-  const smReentryRef = useRef(false); // prevents React re-entering handleSubmit
-
   const [formData, setFormData] = useState<BannerFormData>({
     name: "",
     email: "",
@@ -145,13 +198,6 @@ const FranchiseBannerForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // If this is the synthetic submit we fired for Sales Max, let it pass
-    // through (Sales Max's listener reads the values) and do nothing else.
-    if (smReentryRef.current) {
-      smReentryRef.current = false;
-      return;
-    }
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
       toast({
@@ -241,33 +287,21 @@ const FranchiseBannerForm = () => {
       }
 
       if (supabaseSuccess || zohoSuccess) {
-        // ✅ Fire a NATIVE submit event so Sales Max captures the form.
-        // Done BEFORE reset/navigate, while inputs still hold values.
-        try {
-          if (formRef.current) {
-            smReentryRef.current = true;
-            formRef.current.dispatchEvent(
-              new Event("submit", { bubbles: true, cancelable: true })
-            );
-          }
-        } catch (smErr) {
-          console.warn("Sales Max trigger failed:", smErr);
-        }
+        // ✅ Send a clean, React-free form to Sales Max
+        fireSalesMaxCapture(payload);
 
-        // Give Sales Max a moment to read + send before clearing/navigating
-        setTimeout(() => {
-          setFormData({
-            name: "",
-            email: "",
-            countryCode: DEFAULT_COUNTRY_CODE,
-            phone: "",
-            city: "",
-            chooseModel: "",
-            preferredModel: "",
-          });
-          navigate("/thank-you");
-        }, 600);
+        setFormData({
+          name: "",
+          email: "",
+          countryCode: DEFAULT_COUNTRY_CODE,
+          phone: "",
+          city: "",
+          chooseModel: "",
+          preferredModel: "",
+        });
 
+        // Small delay so Sales Max finishes sending before route change
+        window.setTimeout(() => navigate("/thank-you"), 600);
         return;
       } else {
         toast({
@@ -314,7 +348,7 @@ const FranchiseBannerForm = () => {
           Submit your details to instantly get the detailed franchise brochure &amp; our team will reach out to you.
         </p>
       </div>
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>
