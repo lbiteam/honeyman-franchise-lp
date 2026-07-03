@@ -6,13 +6,7 @@
     "Address": "F 7 , East of Kailash, Opp Metro Station, Next to first Cry, South Delhi",
     "Model": "Cart"
   },
-  {
-    "S.No": 2,
-    "City": "Rohini",
-    "Region": "Delhi",
-    "Address": "Cafe Rico, Sec 18, Rohini, Delhi",
-    "Model": "Distributor"
-  },
+ 
   {
     "S.No": 3,
     "City": "Rohini",
@@ -48,13 +42,7 @@
     "Address": "Sec 33. Gazebo , infront of Gym, Central Flower Valley, Sohna,Gurugram, (Haryana)",
     "Model": "Ice cream parlour"
   },
-  {
-    "S.No": 8,
-    "City": "Faridabad",
-    "Region": "Haryana",
-    "Address": "Sco 124 sector 79 OMAXE world street faridabad haryana",
-    "Model": "Cafe Honeyman"
-  },
+ 
   {
     "S.No": 9,
     "City": "Ambala",
@@ -62,13 +50,7 @@
     "Address": "Snakkers, Baldev Nagar , Ambala",
     "Model": "Kiosk"
   },
-  {
-    "S.No": 10,
-    "City": "Sonipat",
-    "Region": "Haryana",
-    "Address": "Rodeo Drive mall shop no.58 jugnu grill flame tdi city kundli sonipat pin code 131030",
-    "Model": "Display model"
-  },
+ 
   {
     "S.No": 11,
     "City": "Gurgaon",
@@ -244,13 +226,7 @@
     "Address": "The Cuisine Cafe, Gomti Nagar, Lucknow (UP)",
     "Model": "Display model"
   },
-  {
-    "S.No": 36,
-    "City": "Saharanpur",
-    "Region": "Uttar Pradesh",
-    "Address": "Momos Streat, Delhi Road, opp South City, Saharanpur (UP)",
-    "Model": "Cart"
-  },
+ 
   {
     "S.No": 37,
     "City": "Agra",
@@ -321,20 +297,8 @@
     "Address": "Shop no 1, Katoratal Road, Kashipur (Uttrakhand)",
     "Model": "Distributor"
   },
-  {
-    "S.No": 47,
-    "City": "Vikas Nagar",
-    "Region": "Uttarakhand",
-    "Address": "Scooffle, Near Sanguine Public School, Dehradoon (Uttrakhand)",
-    "Model": "Distributor"
-  },
-  {
-    "S.No": 48,
-    "City": "Haldwani",
-    "Region": "Uttarakhand",
-    "Address": "Chandramauli Group, 38, Ward 12, Shankar Hospital , Rampur Road, Haldwani",
-    "Model": "Kiosk"
-  },
+  
+  
   {
     "S.No": 49,
     "City": "Haldwani",
