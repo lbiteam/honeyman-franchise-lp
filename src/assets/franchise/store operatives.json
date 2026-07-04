@@ -163,13 +163,7 @@
     "Address": "NEAR CANARA BANK,MAIN ROAD, Shaheed Bhagat Singh Nagar, Banga, Punjab, pincode -144505",
     "Model": "Cart"
   },
-  {
-    "S.No": 27,
-    "City": "Sangrur",
-    "Region": "Punjab",
-    "Address": "Grocery Point, Maharaja Ranjit Singh Colony, Street No. 5, Barnala Road, Badrukhan, Sangrur (Pb.) 148001",
-    "Model": "Display model"
-  },
+ 
   {
     "S.No": 28,
     "City": "Gurdaspur",
@@ -566,8 +560,14 @@
     "Region": "Haryana",
     "Address": "Technova india PVT.LTD, 412 to 415,phase IV",
     "Model": "Cart"
+  },
+  {
+    "S.No": 89,
+    "City": "Dasuya",
+    "Region": "Punjab",
+    "Address": "Cafe Honeyman, Hoshiarpur Rd, near Canara bank, Keharvali, Dasuya, Punjab 144205",
+    "Model": "Cafe Honeyman"
   }
- 
 
 
 
