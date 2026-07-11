@@ -154,7 +154,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
 
             <div className="p-6">
   {/* Model filter pills */}
-  {/* <div className="mb-5">
+  <div className="mb-5">
     <label className="block text-sm font-medium text-muted-foreground mb-3">
       FILTER BY MODEL TYPE
     </label>
@@ -183,7 +183,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
         );
       })}
     </div>
-  </div> */}
+  </div>
 
   <label className="block text-sm font-medium text-muted-foreground mb-3">
     OR SELECT YOUR STATE / REGION

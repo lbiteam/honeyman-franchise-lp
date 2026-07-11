@@ -30,3 +30,9 @@ DEPLOYMENT_INFO.md
 DEPLOYMENT_GUIDE.md
 ZOHO_SETUP.md   
 
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
