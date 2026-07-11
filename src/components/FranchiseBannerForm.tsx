@@ -15,29 +15,139 @@ const supabase =
 
 const DEFAULT_COUNTRY_CODE = "+91";
 
-const DIALING_CODES: { value: string; label: string }[] = [
-  { value: "+91", label: "India (+91)" },
-  { value: "+1", label: "United States (+1)" },
-  { value: "+44", label: "United Kingdom (+44)" },
-  { value: "+971", label: "UAE (+971)" },
-  { value: "+966", label: "Saudi Arabia (+966)" },
-  { value: "+974", label: "Qatar (+974)" },
-  { value: "+965", label: "Kuwait (+965)" },
-  { value: "+973", label: "Bahrain (+973)" },
-  { value: "+968", label: "Oman (+968)" },
-  { value: "+65", label: "Singapore (+65)" },
-  { value: "+60", label: "Malaysia (+60)" },
-  { value: "+61", label: "Australia (+61)" },
-  { value: "+86", label: "China (+86)" },
-  { value: "+81", label: "Japan (+81)" },
-];
+type PhoneRule = {
+  label: string;
+  length: number | number[];
+  startPattern: RegExp;
+  hint: string;
+};
+
+const COUNTRY_PHONE_RULES: Record<string, PhoneRule> = {
+  "+91": {
+    label: "India (+91)",
+    length: 10,
+    startPattern: /^[6-9]/,
+    hint: "Enter a 10-digit Indian number starting with 6, 7, 8, or 9.",
+  },
+  "+1": {
+    label: "United States (+1)",
+    length: 10,
+    startPattern: /^[2-9]/,
+    hint: "Enter a 10-digit US number starting with 2–9.",
+  },
+  "+44": {
+    label: "United Kingdom (+44)",
+    length: 10,
+    startPattern: /^[1-9]/,
+    hint: "Enter a valid 10-digit UK number without the country code.",
+  },
+  "+971": {
+    label: "UAE (+971)",
+    length: 9,
+    startPattern: /^5/,
+    hint: "Enter a 9-digit UAE mobile number starting with 5.",
+  },
+  "+966": {
+    label: "Saudi Arabia (+966)",
+    length: 9,
+    startPattern: /^5/,
+    hint: "Enter a 9-digit Saudi mobile number starting with 5.",
+  },
+  "+974": {
+    label: "Qatar (+974)",
+    length: 8,
+    startPattern: /^[3-7]/,
+    hint: "Enter a valid 8-digit Qatar number.",
+  },
+  "+965": {
+    label: "Kuwait (+965)",
+    length: 8,
+    startPattern: /^[2569]/,
+    hint: "Enter a valid 8-digit Kuwait number.",
+  },
+  "+973": {
+    label: "Bahrain (+973)",
+    length: 8,
+    startPattern: /^[13679]/,
+    hint: "Enter a valid 8-digit Bahrain number.",
+  },
+  "+968": {
+    label: "Oman (+968)",
+    length: 8,
+    startPattern: /^[279]/,
+    hint: "Enter a valid 8-digit Oman number.",
+  },
+  "+65": {
+    label: "Singapore (+65)",
+    length: 8,
+    startPattern: /^[3689]/,
+    hint: "Enter a valid 8-digit Singapore number.",
+  },
+  "+60": {
+    label: "Malaysia (+60)",
+    length: [9, 10],
+    startPattern: /^1/,
+    hint: "Enter a valid 9- or 10-digit Malaysian number starting with 1.",
+  },
+  "+61": {
+    label: "Australia (+61)",
+    length: 9,
+    startPattern: /^[23478]/,
+    hint: "Enter a valid 9-digit Australian number.",
+  },
+  "+86": {
+    label: "China (+86)",
+    length: 11,
+    startPattern: /^1/,
+    hint: "Enter an 11-digit Chinese mobile number starting with 1.",
+  },
+  "+81": {
+    label: "Japan (+81)",
+    length: [9, 10],
+    startPattern: /^[1-9]/,
+    hint: "Enter a valid Japanese number without the country code.",
+  },
+};
+
+const DIALING_CODES = Object.entries(COUNTRY_PHONE_RULES).map(
+  ([value, rule]) => ({
+    value,
+    label: rule.label,
+  })
+);
 
 function formatFullPhone(countryCode: string, localPhone: string): string {
   const cc = countryCode.trim();
-  const local = localPhone.replace(/\s/g, "").trim();
+  const local = localPhone.replace(/\D/g, "").trim();
+
   if (!cc && !local) return "";
   if (!local) return cc;
+
   return `${cc} ${local}`;
+}
+
+function getMaximumPhoneLength(rule?: PhoneRule): number {
+  if (!rule) return 20;
+
+  return Array.isArray(rule.length)
+    ? Math.max(...rule.length)
+    : rule.length;
+}
+
+function getMinimumPhoneLength(rule?: PhoneRule): number {
+  if (!rule) return 1;
+
+  return Array.isArray(rule.length)
+    ? Math.min(...rule.length)
+    : rule.length;
+}
+
+function isPhoneLengthValid(phone: string, rule: PhoneRule): boolean {
+  if (Array.isArray(rule.length)) {
+    return rule.length.includes(phone.length);
+  }
+
+  return phone.length === rule.length;
 }
 
 type ChooseModel = "Ice Cream" | "Chai Plus" | "";
@@ -80,19 +190,23 @@ interface ContactPayload {
   preferredModel: string;
 }
 
-const createZohoLead = async (payload: ContactPayload): Promise<boolean> => {
+const createZohoLead = async (
+  payload: ContactPayload
+): Promise<boolean> => {
   try {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
     const apiEndpoint = apiBaseUrl
       ? `${apiBaseUrl}/api/zoho-lead`
       : "/api/zoho-lead";
+
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (response.status === 404) return false;
-    if (!response.ok) return false;
+
+    if (response.status === 404 || !response.ok) return false;
+
     const result = await response.json();
     return result.success === true;
   } catch {
@@ -101,14 +215,12 @@ const createZohoLead = async (payload: ContactPayload): Promise<boolean> => {
 };
 
 /**
- * Sales Max captures the submit event but crashes when it tries to
- * JSON.stringify React-managed inputs (they carry __reactFiber props ->
- * circular structure). So we hand it a clean, vanilla form with plain
- * inputs that have no React fibers. Sales Max serializes it fine.
+ * Sends a clean non-React form event for Sales Max lead capture.
  */
 function fireSalesMaxCapture(payload: ContactPayload) {
   try {
     const ghost = document.createElement("form");
+
     ghost.setAttribute("aria-hidden", "true");
     ghost.style.position = "absolute";
     ghost.style.left = "-9999px";
@@ -126,7 +238,6 @@ function fireSalesMaxCapture(payload: ContactPayload) {
       ghost.appendChild(input);
     };
 
-    // Field names mirror what Sales Max detects (name / email / phone etc.)
     addField("name", payload.name);
     addField("email", payload.email, "email");
     addField("phone", payload.phone, "tel");
@@ -134,37 +245,40 @@ function fireSalesMaxCapture(payload: ContactPayload) {
     addField("chooseModel", payload.chooseModel);
     addField("preferredModel", payload.preferredModel);
 
-    const submitBtn = document.createElement("button");
-    submitBtn.type = "submit";
-    submitBtn.textContent = "Submit";
-    ghost.appendChild(submitBtn);
+    const submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.textContent = "Submit";
+    ghost.appendChild(submitButton);
 
-    // Never let this hidden form actually navigate the page
-    ghost.addEventListener("submit", (e) => e.preventDefault());
+    ghost.addEventListener("submit", (event) => event.preventDefault());
 
     document.body.appendChild(ghost);
 
-    // This is the exact event Sales Max hooks (proven by your console logs).
     ghost.dispatchEvent(
-      new Event("submit", { bubbles: true, cancelable: true })
+      new Event("submit", {
+        bubbles: true,
+        cancelable: true,
+      })
     );
 
-    // Clean up the hidden form after Sales Max has read + sent it
     window.setTimeout(() => {
       if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
     }, 2000);
-  } catch (err) {
-    console.warn("Sales Max capture failed:", err);
+  } catch (error) {
+    console.warn("Sales Max capture failed:", error);
   }
 }
 
 const inputClass =
   "w-full px-4 py-3 mt-1 rounded-xl bg-amber-50/50 border border-amber-100 focus:border-amber-500 focus:bg-white focus:ring-0 transition text-gray-900 placeholder:text-gray-400";
-const labelClass = "text-xs font-bold text-amber-600 uppercase tracking-wide";
+
+const labelClass =
+  "text-xs font-bold text-amber-600 uppercase tracking-wide";
 
 const FranchiseBannerForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState<BannerFormData>({
     name: "",
     email: "",
@@ -174,12 +288,30 @@ const FranchiseBannerForm = () => {
     chooseModel: "",
     preferredModel: "",
   });
+
+  const [isInfoConfirmed, setIsInfoConfirmed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const selectedPhoneRule = COUNTRY_PHONE_RULES[formData.countryCode];
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      countryCode: DEFAULT_COUNTRY_CODE,
+      phone: "",
+      city: "",
+      chooseModel: "",
+      preferredModel: "",
+    });
+    setIsInfoConfirmed(false);
+  };
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
+
     if (name === "chooseModel") {
       setFormData({
         ...formData,
@@ -188,7 +320,32 @@ const FranchiseBannerForm = () => {
       });
       return;
     }
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "countryCode") {
+      setFormData({
+        ...formData,
+        countryCode: value,
+        phone: "",
+      });
+      return;
+    }
+
+    if (name === "phone") {
+      const digitsOnly = value.replace(/\D/g, "");
+      const rule = COUNTRY_PHONE_RULES[formData.countryCode];
+      const maxLength = getMaximumPhoneLength(rule);
+
+      setFormData({
+        ...formData,
+        phone: digitsOnly.slice(0, maxLength),
+      });
+      return;
+    }
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const preferredModelOptions =
@@ -196,10 +353,14 @@ const FranchiseBannerForm = () => {
       ? PREFERRED_MODEL_OPTIONS[formData.chooseModel]
       : [];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim()
+    ) {
       toast({
         title: "Please fill required fields",
         description: "Please enter your name, email and phone number.",
@@ -208,21 +369,48 @@ const FranchiseBannerForm = () => {
       return;
     }
 
-    if (!supabaseUrl || !supabaseKey) {
+    const countryCode = formData.countryCode.trim() || DEFAULT_COUNTRY_CODE;
+    const phoneRule = COUNTRY_PHONE_RULES[countryCode];
+    const localPhone = formData.phone.replace(/\D/g, "");
+
+    if (
+      phoneRule &&
+      (!isPhoneLengthValid(localPhone, phoneRule) ||
+        !phoneRule.startPattern.test(localPhone))
+    ) {
       toast({
-        title: "Configuration Error",
-        description: "Contact form is not properly configured. Please try again later.",
+        title: "Invalid phone number",
+        description: phoneRule.hint,
         variant: "destructive",
       });
       return;
     }
 
-    const countryCode = formData.countryCode.trim() || DEFAULT_COUNTRY_CODE;
-    const fullPhone = formatFullPhone(countryCode, formData.phone);
+    if (!isInfoConfirmed) {
+      toast({
+        title: "Confirmation required",
+        description: "Please confirm that all entered information is correct.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!supabaseUrl || !supabaseKey) {
+      toast({
+        title: "Configuration Error",
+        description:
+          "Contact form is not properly configured. Please try again later.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const fullPhone = formatFullPhone(countryCode, localPhone);
 
     const franchiseLine = [
       formData.chooseModel && `Brand: ${formData.chooseModel}`,
-      formData.preferredModel && `Preferred model: ${formData.preferredModel}`,
+      formData.preferredModel &&
+        `Preferred model: ${formData.preferredModel}`,
     ]
       .filter(Boolean)
       .join(" | ");
@@ -230,9 +418,11 @@ const FranchiseBannerForm = () => {
     const subject = franchiseLine
       ? `Franchise - ${franchiseLine}`
       : "Franchise - Check Availability";
+
     const message = [
       formData.chooseModel && `Choose model: ${formData.chooseModel}`,
-      formData.preferredModel && `Preferred model: ${formData.preferredModel}`,
+      formData.preferredModel &&
+        `Preferred model: ${formData.preferredModel}`,
       `City: ${formData.city || "Not provided"}`,
     ]
       .filter(Boolean)
@@ -247,13 +437,14 @@ const FranchiseBannerForm = () => {
       message,
       formType: "franchise",
       countryCode,
-      phoneLocal: formData.phone.trim(),
+      phoneLocal: localPhone,
       city: formData.city.trim(),
       chooseModel: formData.chooseModel,
       preferredModel: formData.preferredModel,
     };
 
     setIsSubmitting(true);
+
     let supabaseSuccess = false;
     let zohoSuccess = false;
     const errors: string[] = [];
@@ -272,9 +463,10 @@ const FranchiseBannerForm = () => {
           })
           .select()
           .single();
+
         if (error) {
           console.error("Supabase error:", error);
-          errors.push("Supabase: " + error.message);
+          errors.push(`Supabase: ${error.message}`);
         } else {
           supabaseSuccess = true;
         }
@@ -282,52 +474,40 @@ const FranchiseBannerForm = () => {
 
       if (zohoClientId && zohoClientSecret && zohoRefreshToken) {
         const zohoResult = await createZohoLead(payload);
-        if (zohoResult) zohoSuccess = true;
-        else errors.push("Zoho CRM: Failed to create lead");
+
+        if (zohoResult) {
+          zohoSuccess = true;
+        } else {
+          errors.push("Zoho CRM: Failed to create lead");
+        }
       }
 
       if (supabaseSuccess || zohoSuccess) {
-        // ✅ Send a clean, React-free form to Sales Max
         fireSalesMaxCapture(payload);
+        resetForm();
 
-        setFormData({
-          name: "",
-          email: "",
-          countryCode: DEFAULT_COUNTRY_CODE,
-          phone: "",
-          city: "",
-          chooseModel: "",
-          preferredModel: "",
-        });
-
-        // Small delay so Sales Max finishes sending before route change
         window.setTimeout(() => navigate("/thank-you"), 600);
         return;
-      } else {
-        toast({
-          title: "Submission Error",
-          description:
-            errors.length > 0
-              ? errors.join("; ")
-              : "Failed to submit. Please try again.",
-          variant: "destructive",
-          duration: 5000,
-        });
-        setFormData({
-          name: "",
-          email: "",
-          countryCode: DEFAULT_COUNTRY_CODE,
-          phone: "",
-          city: "",
-          chooseModel: "",
-          preferredModel: "",
-        });
       }
-    } catch (err: unknown) {
-      console.error("Form submission error:", err);
+
+      toast({
+        title: "Submission Error",
+        description:
+          errors.length > 0
+            ? errors.join("; ")
+            : "Failed to submit. Please try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
+
+      resetForm();
+    } catch (error: unknown) {
+      console.error("Form submission error:", error);
+
       toast({
         title: "Error",
-        description: (err as Error)?.message || "An unexpected error occurred.",
+        description:
+          (error as Error)?.message || "An unexpected error occurred.",
         variant: "destructive",
       });
     } finally {
@@ -335,25 +515,32 @@ const FranchiseBannerForm = () => {
     }
   };
 
+ 
+
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(217,119,6,0.3)] p-8 w-full max-w-md relative z-10 border-t-8 border-amber-500">
       <div className="text-center mb-6">
         <p className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-1">
           Free Franchise Brochure
         </p>
+
         <h3 className="text-2xl font-extrabold text-gray-900 leading-tight">
           Enquire &amp; Unlock Your Brochure
         </h3>
+
         <p className="text-gray-500 text-sm mt-2">
-          Submit your details to instantly get the detailed franchise brochure &amp; our team will reach out to you.
+          Submit your details to instantly get the detailed franchise brochure
+          &amp; our team will reach out to you.
         </p>
       </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>
               Name <span className="text-red-500">*</span>
             </label>
+
             <input
               type="text"
               name="name"
@@ -365,10 +552,12 @@ const FranchiseBannerForm = () => {
               className={inputClass}
             />
           </div>
+
           <div>
             <label className={labelClass}>
               Email <span className="text-red-500">*</span>
             </label>
+
             <input
               type="email"
               name="email"
@@ -381,14 +570,17 @@ const FranchiseBannerForm = () => {
             />
           </div>
         </div>
+
         <div>
           <label className={labelClass}>
             Phone Number <span className="text-red-500">*</span>
           </label>
+
           <div className="flex gap-2">
             <label htmlFor="franchiseCountryCode" className="sr-only">
               Country code
             </label>
+
             <select
               id="franchiseCountryCode"
               name="countryCode"
@@ -403,21 +595,38 @@ const FranchiseBannerForm = () => {
                 </option>
               ))}
             </select>
+
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              minLength={10}
-              maxLength={10}
+              inputMode="numeric"
+              pattern="[0-9]*"
+              minLength={getMinimumPhoneLength(selectedPhoneRule)}
+              maxLength={getMaximumPhoneLength(selectedPhoneRule)}
               required
-              placeholder="1234567890"
+              placeholder={
+                selectedPhoneRule
+                  ? `Enter ${selectedPhoneRule.length} digits`
+                  : "Phone number"
+              }
               className={`${inputClass} min-w-0 flex-1`}
             />
           </div>
+
+          {selectedPhoneRule && (
+            <p className="mt-1 text-xs text-gray-500">
+              {selectedPhoneRule.hint}
+            </p>
+          )}
         </div>
+
         <div>
-          <label className={labelClass}>City</label>
+          <label className={labelClass}>
+            City <span className="text-red-500">*</span>
+          </label>
+
           <input
             type="text"
             name="city"
@@ -429,8 +638,12 @@ const FranchiseBannerForm = () => {
             required
           />
         </div>
+
         <div>
-          <label className={labelClass}>Choose Model</label>
+          <label className={labelClass}>
+            Choose Model <span className="text-red-500">*</span>
+          </label>
+
           <select
             name="chooseModel"
             value={formData.chooseModel}
@@ -445,8 +658,12 @@ const FranchiseBannerForm = () => {
             <option value="Chai Plus">Chai Plus</option>
           </select>
         </div>
+
         <div>
-          <label className={labelClass}>Preferred Model</label>
+          <label className={labelClass}>
+            Preferred Model <span className="text-red-500">*</span>
+          </label>
+
           <select
             name="preferredModel"
             value={formData.preferredModel}
@@ -458,6 +675,7 @@ const FranchiseBannerForm = () => {
             <option value="" disabled>
               {formData.chooseModel ? "Select model" : "Select brand first"}
             </option>
+
             {preferredModelOptions.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -465,6 +683,21 @@ const FranchiseBannerForm = () => {
             ))}
           </select>
         </div>
+
+        <label className="flex items-start gap-3 cursor-pointer rounded-xl border border-amber-100 bg-amber-50/40 px-4 py-3">
+          <input
+            type="checkbox"
+            checked={isInfoConfirmed}
+            onChange={(event) => setIsInfoConfirmed(event.target.checked)}
+            required
+            className="mt-1 h-4 w-4 shrink-0 accent-amber-500"
+          />
+
+          <span className="text-sm text-gray-600">
+            I confirm that all information entered above is correct.
+          </span>
+        </label>
+
         <button
           type="submit"
           disabled={isSubmitting}
@@ -479,8 +712,10 @@ const FranchiseBannerForm = () => {
             </>
           )}
         </button>
+
         <p className="text-center text-xs text-gray-400 mt-3">
-          <i className="fas fa-lock mr-1 text-amber-300" /> 100% Data Privacy Guaranteed.
+          <i className="fas fa-lock mr-1 text-amber-300" /> 100% Data Privacy
+          Guaranteed.
         </p>
       </form>
     </div>
