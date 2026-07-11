@@ -409,6 +409,7 @@ const FranchiseBannerForm = () => {
               value={formData.phone}
               onChange={handleChange}
               minLength={10}
+              maxLength={10}
               required
               placeholder="1234567890"
               className={`${inputClass} min-w-0 flex-1`}
