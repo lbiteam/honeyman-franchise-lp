@@ -492,12 +492,7 @@
   "City": "Amikapur ",
   "State": "Chhattisgarh"
  },
- {
-  "Sr No": 95,
-  "Address": "Shop no.62,Jagdish market opposite Allahabad Bank High court, Prayagraj",
-  "City": "Pragyraj ",
-  "State": "Uttar Pradesh"
- },
+
  {
   "Sr No": 96,
   "Address": "Astha Medicare,Reti street Lal masjid road Moradabad 244001",
@@ -583,18 +578,7 @@
    "City": "Nerul",
    "State": "Maharashtra"
   },
-  {
-   "Sr No": 112,
-   "Address": "",
-   "City": "Akola",
-   "State": "Maharashtra"
-  },
-  {
-   "Sr No": 113,
-   "Address": "Building No./Flat No.: 66 ,Nagar Palika Shopping Complex, Road/Street: Hirapur Road ,Locality/Sub Locality: Nagar Palika Building 66 ,City/Town/Village: Chalisgaon ,District: Jalgaon ,State: Maharashtra ,PInCode: 424101",
-   "City": "Jalgaon",
-   "State": "Maharashtra"
-  },
+ 
   {
    "Sr No": 114   ,
    "Address": "NIBM Post Office Rd, next to The Ark Mahadev Wadi, Autadwadi Handewadi, Kondhwa, Pune, Maharashtra 411048",
@@ -630,11 +614,6 @@
    "City": "DEHRADUN",
    "State": "Uttarakhand"
   },{
-    "Sr No": 119  ,
-    "Address": "Building No./Flat No.: 416/4/1 416/4 Road/Street: CHAUPATIYAN Locality/Sub Locality: Dilaram Baradari",
-    "City": "Lucknow",
-    "State": "Uttar Pradesh"
-   },{
     "Sr No": 120  ,
     "Address": "Lucknow",
     "City": "Lucknow",

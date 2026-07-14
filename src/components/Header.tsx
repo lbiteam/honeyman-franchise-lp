@@ -129,7 +129,7 @@ const Header = () => {
               Model
             </Link>
             <Link to="/store-locator" className="font-bold text-gray-800 py-3 border-b border-amber-50" onClick={() => setMobileMenuOpen(false)}>
-              Store
+              Store-locator
             </Link>
             {/* <Link to="/expo" className="font-bold text-amber-700 py-3 border-b border-amber-50 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
               Expo 2026 <span className="w-2 h-2 bg-red-500 rounded-full inline-block" />

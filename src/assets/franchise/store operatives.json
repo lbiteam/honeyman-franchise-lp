@@ -1,11 +1,5 @@
 [
-  {
-    "S.No": 1,
-    "City": "South Delhi",
-    "Region": "Delhi",
-    "Address": "F 7 , East of Kailash, Opp Metro Station, Next to first Cry, South Delhi",
-    "Model": "Cart"
-  },
+ 
  
   {
     "S.No": 3,
@@ -51,13 +45,7 @@
     "Model": "Kiosk"
   },
  
-  {
-    "S.No": 11,
-    "City": "Gurgaon",
-    "Region": "Haryana",
-    "Address": "Cafeteria green, Sec 74, Gurgaon",
-    "Model": "Cart"
-  },
+ 
   {
     "S.No": 12,
     "City": "Gurgaon",
@@ -72,13 +60,7 @@
     "Address": "Ellan Miracle Sector 84 Gurugram Pincode - 122004",
     "Model": "Cafe Honeyman"
   },
-  {
-    "S.No": 14,
-    "City": "Ganaur",
-    "Region": "Haryana",
-    "Address": "Bharat Petroleum , Near Malik dharam kanta, Railway Road, Ganaur , Sonipat",
-    "Model": "Cart"
-  },
+ 
   {
     "S.No": 15,
     "City": "Hisar",
@@ -107,13 +89,7 @@
     "Address": "CLASSIC CREAM CO PREM BASTI STREET No 10, DC OFFICE ROAD, Adjoining: Bansal Departmental Store, SANGRUR 148001 (PANJAB)",
     "Model": "Distributionship"
   },
-  {
-    "S.No": 19,
-    "City": "Jalandhar",
-    "Region": "Punjab",
-    "Address": "Shop no 10, Cannt County, Jamsher Road, Near Sufi Pind, Jalandhar (Punjab)",
-    "Model": "Display model"
-  },
+
   {
     "S.No": 20,
     "City": "Mohali",
@@ -284,13 +260,7 @@
     "Address": "A-1 chain factory chauraha, mariampur road,shastri nagar, kanpur,208005 infront of dilbag rose garden",
     "Model": "Ice cream parlour"
   },
-  {
-    "S.No": 46,
-    "City": "Kashipur",
-    "Region": "Uttarakhand",
-    "Address": "Shop no 1, Katoratal Road, Kashipur (Uttrakhand)",
-    "Model": "Distributor"
-  },
+ 
   
   
   {
@@ -477,13 +447,7 @@
     "Address": "\"Store no. 17A ,Ground floor, fairmount fortune one mall, 317 B, Czech Colony, Sanath Nagar, Hyderabad, Telangana 500018.\nLandmark:Near Erragadda Metro Station\"",
     "Model": "Master Franchise Cafe"
   },
-  {
-    "S.No": 77,
-    "City": "Siliguri",
-    "Region": "West Bengal",
-    "Address": "BBD colony,Post office - Pradhan nagar City- Siliguri Dist :- Darjeeling Pin:- 734003 West Bengal",
-    "Model": "Display model"
-  },
+  
   {
     "S.No": 78,
     "City": "South 24 Parganas",
@@ -567,10 +531,82 @@
     "Region": "Punjab",
     "Address": "Cafe Honeyman, Hoshiarpur Rd, near Canara bank, Keharvali, Dasuya, Punjab 144205",
     "Model": "Cafe Honeyman"
+  },
+  {
+    "S.No": 90,
+    "City": "Jammu",
+    "Region": "Jammu and Kashmir",
+    "Address": "Opp Punjabi Brothers, Rehari Road, Rehari Colony, Jammu, Jammu and Kashmir 180005",
+    "Model": "Cart"
+  },
+  {
+    "S.No": 91,
+    "City": "Faridkot",
+    "Region": "Punjab",
+    "Address": "9 collection, shop no. 9, opposite GGS hospital OPD gate near street no. 5 of guru Nanak colony ( shop is on main sadiq - Faridkot road), PIN code 151203",
+    "Model": "Display model"
   }
+,{
+  "S.No": 92,
+  "City": "Pragyraj",
+  "Region": "Uttar Pradesh",
+  "Address": "Shop no.62,Jagdish market opposite Allahabad Bank High court, Prayagraj",
+  "Model": "Distributor"
+},{
+  "S.No": 93,
+  "City": "Lucknow",
+  "Region": "Uttar Pradesh",
+  "Address": "Building No./Flat No.: 416/4/1 416/4 Road/Street: CHAUPATIYAN, Locality/Sub Locality: Dilaram Baradari, City/Town/Village: Lucknow, District: Lucknow, State: Uttar Pradesh, PIN Code: 226003",
+  "Model": "Distributionship"
+},{
 
+},{
+  "S.No": 94,
+  "City": "Dibrugarh",
+  "Region": "Assam",
+  "Address": "Chowpatty the food court Street, H S ROAD,  DIBRUGARH CITY. ASSAM 786001",
+  "Model": "Cafe Honeyman"
+},{
+  "S.No": 95,
+  "City": "Gujarat",
+  "Region": "Vadodara",
+  "Address": "Kashi Vishveshwar Township, Jetalpur Road, Alkapuri, Vadodara (Gujarat)",
+  "Model": "Cafe Honeyman"
+},
+{
+  "S.No": 96,
+  "City": "Jamnagar",
+  "Region": "Gujarat",
+  "Address": "Rudransh Food, Shop No. C -1, Ground Flor, Patel Colony sheri No. 2/2, Behind Vikash School, Vrundavan park-C, Jamnagar -361008 Gujarat.",
+  "Model": "Display model"
+},{
 
-
+},{
+  "S.No": 97,
+  "City": "Akola",
+  "Region": "Maharashtra",
+  "Address": "Barah Joytirling Temple Road, Raut Wadi, Ranpise Nagar, Akola, Maharashtra 444001",
+  "Model": "Cart"
+},
+{
+  "S.No": 98,
+  "City": "Jalgaon",
+  "Region": "Maharashtra",
+  "Address": "Building No./Flat No.: 66 Name Of Premises/Building: Nagar Palika Shopping Complex Road/Street: Hirapur Road Locality/Sub Locality: Nagar Palika Building 66 City/Town/Village: Chalisgaon District: Jalgaon State: Maharashtra PIN Code: 424101",
+  "Model": "Distributionship"
+},{
+  "S.No": 99,
+  "City": "Pune",
+  "Region": "Maharashtra",
+  "Address": "Tribecca high street next to Starbucks - 411060",
+  "Model": "Distributor"
+},{
+  "S.No": 100,
+  "City": "Bhubaneswar",
+  "Region": "Odisha",
+  "Address": "Plot 2771, Puri bypass road, Near tankapani sai mandir traffic square, Bhubaneswar,  Odisha, Pin: 751018",
+  "Model": "Cart"
+}
   
 
   
