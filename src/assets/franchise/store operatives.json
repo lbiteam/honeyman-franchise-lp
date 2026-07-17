@@ -568,8 +568,8 @@
   "Model": "Cafe Honeyman"
 },{
   "S.No": 95,
-  "City": "Gujarat",
-  "Region": "Vadodara",
+  "City": "Vadodara",
+  "Region": "Gujarat",
   "Address": "Kashi Vishveshwar Township, Jetalpur Road, Alkapuri, Vadodara (Gujarat)",
   "Model": "Cafe Honeyman"
 },
@@ -605,6 +605,33 @@
   "City": "Bhubaneswar",
   "Region": "Odisha",
   "Address": "Plot 2771, Puri bypass road, Near tankapani sai mandir traffic square, Bhubaneswar,  Odisha, Pin: 751018",
+  "Model": "Cart"
+},{
+  "S.No": 101,  
+  "City": "Ghaziabad",
+  "Region": "Uttar Pradesh",
+  "Address": "2F-38, second floor, Au family hub, Aditya world city, Ghaziabad, Uttar Pradesh -201002",
+  "Model": "Ice cream parlour"
+},{
+
+},{
+  "S.No": 102,
+  "City": "Kashipur",
+  "Region": "Uttarakhand",
+  "Address": "Shop no 1, Katoratal Road, Kashipur (Uttrakhand)",
+  "Model": "Distributor"
+},
+{
+  "S.No": 103,
+  "City": "Kalyan",
+  "Region": "Maharashtra",
+  "Address": "Near st. Lawrence School, Mangeshi Arcade Shop No. 4, Kolivali Gaon near Paliwan Chowk, Kalyan, West District-Thane 421301",
+  "Model": "Ice cream parlour"
+},{
+  "S.No": 104,
+  "City": "Cuttack",
+  "Region": "Odisha",
+  "Address": "Locality - Nayak sahi,Mangalabag District-Cuttack  State-Odisha Pin-753001",
   "Model": "Cart"
 }
   
