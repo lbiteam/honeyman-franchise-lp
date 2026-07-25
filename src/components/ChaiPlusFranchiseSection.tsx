@@ -262,10 +262,10 @@ const ChaiPlusFranchiseSection = () => {
             {/* Floating zero sugar badge */}
             <div className="absolute -left-2 bottom-8 z-20 hidden flex-col items-center justify-center rounded-2xl border-4 border-white bg-white px-4 py-3 text-center shadow-2xl sm:flex">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#1e7a4d]">
-                ZERO
+                No
               </span>
               <span className="font-display text-base font-extrabold leading-tight text-[#0d3b2e]">
-                Refined Sugar
+               Added Refined Sugar
               </span>
             </div>
           </div>
@@ -678,7 +678,7 @@ const ChaiPlusFranchiseSection = () => {
                   <CupSoda className="h-3.5 w-3.5" /> Specialty Beverage
                 </span>
                 <h4 className="mt-5 font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl">
-                  Chewy pearls, honey sweetness, zero refined sugar
+                  Chewy pearls, honey sweetness, No added  refine sugar
                 </h4>
                 <p className="mt-4 text-sm leading-relaxed text-[#cfe6d8] sm:text-base">
                 Tiny pearls packed with fruity goodness.
