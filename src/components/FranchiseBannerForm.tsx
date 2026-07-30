@@ -6,9 +6,6 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-const zohoClientId = import.meta.env.VITE_ZOHO_CLIENT_ID;
-const zohoClientSecret = import.meta.env.VITE_ZOHO_CLIENT_SECRET;
-const zohoRefreshToken = import.meta.env.VITE_ZOHO_REFRESH_TOKEN;
 
 const supabase =
   supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
@@ -190,14 +187,14 @@ interface ContactPayload {
   preferredModel: string;
 }
 
-const createZohoLead = async (
+const createDolibarrLead = async (
   payload: ContactPayload
 ): Promise<boolean> => {
   try {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
     const apiEndpoint = apiBaseUrl
-      ? `${apiBaseUrl}/api/zoho-lead`
-      : "/api/zoho-lead";
+      ? `${apiBaseUrl}/api/dolibarr-lead`
+      : "/api/dolibarr-lead";
 
     const response = await fetch(apiEndpoint, {
       method: "POST",
@@ -446,7 +443,7 @@ const FranchiseBannerForm = () => {
     setIsSubmitting(true);
 
     let supabaseSuccess = false;
-    let zohoSuccess = false;
+    let dolibarrSuccess = false;
     const errors: string[] = [];
 
     try {
@@ -472,17 +469,15 @@ const FranchiseBannerForm = () => {
         }
       }
 
-      if (zohoClientId && zohoClientSecret && zohoRefreshToken) {
-        const zohoResult = await createZohoLead(payload);
+      const dolibarrResult = await createDolibarrLead(payload);
 
-        if (zohoResult) {
-          zohoSuccess = true;
-        } else {
-          errors.push("Zoho CRM: Failed to create lead");
-        }
+      if (dolibarrResult) {
+        dolibarrSuccess = true;
+      } else {
+        errors.push("Dolibarr CRM: Failed to create lead");
       }
 
-      if (supabaseSuccess || zohoSuccess) {
+      if (supabaseSuccess || dolibarrSuccess) {
         fireSalesMaxCapture(payload);
         resetForm();
 
