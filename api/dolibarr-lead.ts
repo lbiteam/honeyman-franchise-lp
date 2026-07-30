@@ -3,6 +3,11 @@
 // and to keep the DOLIBARR_API_KEY off the client.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { Agent, setGlobalDispatcher } from 'undici';
+
+// TEMPORARY: allow self-signed certificate on the Dolibarr server.
+// Remove this once crm.honeymanstore.com has a trusted SSL certificate (e.g. Let's Encrypt).
+setGlobalDispatcher(new Agent({ connect: { rejectUnauthorized: false } }));
 
 interface DolibarrLeadPayload {
   name?: string;
