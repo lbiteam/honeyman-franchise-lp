@@ -180,18 +180,32 @@ export default async function handler(
         .filter(Boolean)
         .join('\n');
 
+      // Update the core note first — this must succeed for the lead to register.
       const updateResp = await fetch(`${baseUrl}/thirdparties/${existingId}`, {
         method: 'PUT',
         headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          note_public: updatedNote,
-          array_options: extrafields,
-        }),
+        body: JSON.stringify({ note_public: updatedNote }),
       });
 
       if (!updateResp.ok) {
         const errorText = await updateResp.text();
         throw new Error(`Dolibarr update failed: ${updateResp.statusText} - ${errorText}`);
+      }
+
+      // Extrafields update is best-effort — a bad/renamed field code here
+      // must never prevent the lead from being registered as a duplicate.
+      try {
+        const extraResp = await fetch(`${baseUrl}/thirdparties/${existingId}`, {
+          method: 'PUT',
+          headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ array_options: extrafields }),
+        });
+        if (!extraResp.ok) {
+          const extraErrorText = await extraResp.text();
+          console.warn(`Dolibarr extrafields update failed (non-blocking): ${extraResp.statusText} - ${extraErrorText}`);
+        }
+      } catch (extraErr) {
+        console.warn('Dolibarr extrafields update threw (non-blocking):', extraErr);
       }
 
       setCorsHeaders(res);
@@ -213,7 +227,7 @@ export default async function handler(
       array_options: extrafields,
     };
 
-    const createResp = await fetch(`${baseUrl}/thirdparties`, {
+    let createResp = await fetch(`${baseUrl}/thirdparties`, {
       method: 'POST',
       headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify(leadData),
@@ -221,7 +235,30 @@ export default async function handler(
 
     if (!createResp.ok) {
       const errorText = await createResp.text();
-      throw new Error(`Dolibarr API error: ${createResp.statusText} - ${errorText}`);
+      console.warn(
+        `Dolibarr create with extrafields failed, retrying with core fields only: ${createResp.statusText} - ${errorText}`
+      );
+
+      // Fallback: a bad/renamed extrafield code must never cause the lead
+      // to be lost entirely. Retry with just the core fields.
+      const coreOnlyData = {
+        name,
+        email,
+        phone: normalizedPhone,
+        client: 2,
+        note_public: note || undefined,
+      };
+
+      createResp = await fetch(`${baseUrl}/thirdparties`, {
+        method: 'POST',
+        headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(coreOnlyData),
+      });
+
+      if (!createResp.ok) {
+        const retryErrorText = await createResp.text();
+        throw new Error(`Dolibarr API error (retry also failed): ${createResp.statusText} - ${retryErrorText}`);
+      }
     }
 
     const newId = await createResp.json();
