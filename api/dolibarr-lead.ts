@@ -58,10 +58,24 @@ function buildNote(data: DolibarrLeadPayload): string {
 }
 
 /**
- * Maps form data into Dolibarr's custom extrafields (array_options), based
- * on the Third Party extrafield setup: lead_source, email_id, business_model,
- * investment_timeline, whats_was_the_budget_for_the_franchise, city, state,
- * country, name, phone.
+ * These four extrafields are marked Mandatory=Yes in Dolibarr's Third Party
+ * extrafield config. They MUST be included on every create/update call —
+ * a record saved without them becomes permanently broken (Dolibarr rejects
+ * all future updates on it, even unrelated ones like a note change).
+ */
+function buildRequiredExtrafields(data: DolibarrLeadPayload, normalizedPhone?: string) {
+  return {
+    options_email_id: data.email?.trim() || '',
+    options_city: (data.city || data.location)?.trim() || '',
+    options_name: data.name?.trim() || '',
+    options_phone: normalizedPhone || '',
+  };
+}
+
+/**
+ * These extrafields are NOT mandatory in Dolibarr, so it's safe to treat
+ * them as best-effort — a bad/renamed field code here should never block
+ * the lead from being saved.
  *
  * NOTE: "investment_timeline" is still a best-guess based on the truncated
  * label in the Dolibarr extrafields screen ("investment_tim..."). If that
@@ -69,18 +83,14 @@ function buildNote(data: DolibarrLeadPayload): string {
  * Party in Dolibarr, click edit on that row, confirm the exact "Attribute
  * code", and tell me the correct value so I can fix the key name below.
  */
-function buildExtrafields(data: DolibarrLeadPayload, normalizedPhone?: string) {
+function buildOptionalExtrafields(data: DolibarrLeadPayload) {
   return {
     options_lead_source: 'Website Franchise Form',
-    options_email_id: data.email?.trim() || '',
     options_business_model: data.chooseModel?.trim() || '',
     options_investment_timeline: '', // not currently collected by the form
     options_whats_was_the_budget_for_franchise: data.preferredModel?.trim() || '',
-    options_city: (data.city || data.location)?.trim() || '',
     options_state: '', // not currently collected by the form
     options_country: '', // not currently collected by the form
-    options_name: data.name?.trim() || '',
-    options_phone: normalizedPhone || '',
   };
 }
 
@@ -156,7 +166,8 @@ export default async function handler(
     const normalizedPhone = normalizePhone(formData.phone);
     const name = formData.name?.trim() || 'Unnamed Lead';
     const note = buildNote(formData);
-    const extrafields = buildExtrafields(formData, normalizedPhone);
+    const requiredExtrafields = buildRequiredExtrafields(formData, normalizedPhone);
+    const optionalExtrafields = buildOptionalExtrafields(formData);
 
     // 1. Check for an existing prospect by email, then normalized phone
     const existingId = await findExistingThirdParty(baseUrl, apiKey, email, normalizedPhone);
@@ -180,11 +191,15 @@ export default async function handler(
         .filter(Boolean)
         .join('\n');
 
-      // Update the core note first — this must succeed for the lead to register.
+      // Update the core note + required extrafields together — required
+      // fields must always be sent or the record stays permanently broken.
       const updateResp = await fetch(`${baseUrl}/thirdparties/${existingId}`, {
         method: 'PUT',
         headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ note_public: updatedNote }),
+        body: JSON.stringify({
+          note_public: updatedNote,
+          array_options: requiredExtrafields,
+        }),
       });
 
       if (!updateResp.ok) {
@@ -192,20 +207,20 @@ export default async function handler(
         throw new Error(`Dolibarr update failed: ${updateResp.statusText} - ${errorText}`);
       }
 
-      // Extrafields update is best-effort — a bad/renamed field code here
+      // Optional extrafields are best-effort — a bad/renamed field code here
       // must never prevent the lead from being registered as a duplicate.
       try {
         const extraResp = await fetch(`${baseUrl}/thirdparties/${existingId}`, {
           method: 'PUT',
           headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ array_options: extrafields }),
+          body: JSON.stringify({ array_options: optionalExtrafields }),
         });
         if (!extraResp.ok) {
           const extraErrorText = await extraResp.text();
-          console.warn(`Dolibarr extrafields update failed (non-blocking): ${extraResp.statusText} - ${extraErrorText}`);
+          console.warn(`Dolibarr optional extrafields update failed (non-blocking): ${extraResp.statusText} - ${extraErrorText}`);
         }
       } catch (extraErr) {
-        console.warn('Dolibarr extrafields update threw (non-blocking):', extraErr);
+        console.warn('Dolibarr optional extrafields update threw (non-blocking):', extraErr);
       }
 
       setCorsHeaders(res);
@@ -217,14 +232,14 @@ export default async function handler(
       });
     }
 
-    // 2. No match found — create a new prospect, with extrafields populated
+    // 2. No match found — create a new prospect, with all extrafields populated
     const leadData: Record<string, unknown> = {
       name,
       email,
       phone: normalizedPhone,
       client: 2, // 2 = Prospect status in Dolibarr
       note_public: note || undefined,
-      array_options: extrafields,
+      array_options: { ...requiredExtrafields, ...optionalExtrafields },
     };
 
     let createResp = await fetch(`${baseUrl}/thirdparties`, {
@@ -236,23 +251,25 @@ export default async function handler(
     if (!createResp.ok) {
       const errorText = await createResp.text();
       console.warn(
-        `Dolibarr create with extrafields failed, retrying with core fields only: ${createResp.statusText} - ${errorText}`
+        `Dolibarr create with all extrafields failed, retrying with required extrafields only: ${createResp.statusText} - ${errorText}`
       );
 
-      // Fallback: a bad/renamed extrafield code must never cause the lead
-      // to be lost entirely. Retry with just the core fields.
-      const coreOnlyData = {
+      // Fallback: drop only the OPTIONAL extrafields if something in that
+      // group is broken. The required ones must stay, or the record becomes
+      // permanently unsaveable afterward.
+      const requiredOnlyData = {
         name,
         email,
         phone: normalizedPhone,
         client: 2,
         note_public: note || undefined,
+        array_options: requiredExtrafields,
       };
 
       createResp = await fetch(`${baseUrl}/thirdparties`, {
         method: 'POST',
         headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify(coreOnlyData),
+        body: JSON.stringify(requiredOnlyData),
       });
 
       if (!createResp.ok) {
