@@ -3,11 +3,6 @@
 // and to keep the DOLIBARR_API_KEY off the client.
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Agent, setGlobalDispatcher } from 'undici';
-
-// TEMPORARY: allow self-signed certificate on the Dolibarr server.
-// Remove this once crm.honeymanstore.com has a trusted SSL certificate (e.g. Let's Encrypt).
-setGlobalDispatcher(new Agent({ connect: { rejectUnauthorized: false } }));
 
 interface DolibarrLeadPayload {
   name?: string;
@@ -22,6 +17,15 @@ interface DolibarrLeadPayload {
   city?: string;
   chooseModel?: string;
   preferredModel?: string;
+}
+
+// Strips everything except digits, so "+91 987 654 3210" and "919876543210"
+// are treated as the same number. This fixes the "second submission missing"
+// bug, which was caused by phone-format mismatches breaking duplicate lookup.
+function normalizePhone(phone?: string): string | undefined {
+  if (!phone) return undefined;
+  const digits = phone.replace(/\D/g, '');
+  return digits || undefined;
 }
 
 function buildFranchiseNote(data: DolibarrLeadPayload): string {
@@ -53,6 +57,33 @@ function buildNote(data: DolibarrLeadPayload): string {
   return isFranchise ? buildFranchiseNote(data) : buildContactNote(data);
 }
 
+/**
+ * Maps form data into Dolibarr's custom extrafields (array_options), based
+ * on the Third Party extrafield setup: lead_source, email_id, business_model,
+ * investment_timeline, whats_was_the_budget_for_the_franchise, city, state,
+ * country, name, phone.
+ *
+ * NOTE: "investment_timeline" is still a best-guess based on the truncated
+ * label in the Dolibarr extrafields screen ("investment_tim..."). If that
+ * field doesn't populate after testing, open Setup -> Extrafields -> Third
+ * Party in Dolibarr, click edit on that row, confirm the exact "Attribute
+ * code", and tell me the correct value so I can fix the key name below.
+ */
+function buildExtrafields(data: DolibarrLeadPayload, normalizedPhone?: string) {
+  return {
+    options_lead_source: 'Website Franchise Form',
+    options_email_id: data.email?.trim() || '',
+    options_business_model: data.chooseModel?.trim() || '',
+    options_investment_timeline: '', // not currently collected by the form
+    options_whats_was_the_budget_for_franchise: data.preferredModel?.trim() || '',
+    options_city: (data.city || data.location)?.trim() || '',
+    options_state: '', // not currently collected by the form
+    options_country: '', // not currently collected by the form
+    options_name: data.name?.trim() || '',
+    options_phone: normalizedPhone || '',
+  };
+}
+
 function setCorsHeaders(res: VercelResponse): void {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -60,14 +91,14 @@ function setCorsHeaders(res: VercelResponse): void {
 }
 
 /**
- * Looks up an existing Dolibarr third party by email, then phone.
+ * Looks up an existing Dolibarr third party by email, then normalized phone.
  * Returns the numeric id if found, otherwise null.
  */
 async function findExistingThirdParty(
   baseUrl: string,
   apiKey: string,
   email?: string,
-  phone?: string
+  normalizedPhone?: string
 ): Promise<number | null> {
   const tryLookup = async (field: 'email' | 'phone', value: string): Promise<number | null> => {
     const url = `${baseUrl}/thirdparties?sqlfilters=${encodeURIComponent(
@@ -85,8 +116,9 @@ async function findExistingThirdParty(
     const id = await tryLookup('email', email);
     if (id) return id;
   }
-  if (phone) {
-    const id = await tryLookup('phone', phone);
+  if (normalizedPhone) {
+    // Search using the normalized digits-only value, matching how we now store it
+    const id = await tryLookup('phone', normalizedPhone);
     if (id) return id;
   }
   return null;
@@ -121,12 +153,13 @@ export default async function handler(
     }
 
     const email = formData.email?.trim().toLowerCase() || undefined;
-    const phone = formData.phone?.trim() || undefined;
+    const normalizedPhone = normalizePhone(formData.phone);
     const name = formData.name?.trim() || 'Unnamed Lead';
     const note = buildNote(formData);
+    const extrafields = buildExtrafields(formData, normalizedPhone);
 
-    // 1. Check for an existing prospect by email, then phone
-    const existingId = await findExistingThirdParty(baseUrl, apiKey, email, phone);
+    // 1. Check for an existing prospect by email, then normalized phone
+    const existingId = await findExistingThirdParty(baseUrl, apiKey, email, normalizedPhone);
 
     if (existingId) {
       // Append a note instead of creating a duplicate record
@@ -150,7 +183,10 @@ export default async function handler(
       const updateResp = await fetch(`${baseUrl}/thirdparties/${existingId}`, {
         method: 'PUT',
         headers: { DOLAPIKEY: apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ note_public: updatedNote }),
+        body: JSON.stringify({
+          note_public: updatedNote,
+          array_options: extrafields,
+        }),
       });
 
       if (!updateResp.ok) {
@@ -167,13 +203,14 @@ export default async function handler(
       });
     }
 
-    // 2. No match found — create a new prospect
-    const leadData: Record<string, string | number | undefined> = {
+    // 2. No match found — create a new prospect, with extrafields populated
+    const leadData: Record<string, unknown> = {
       name,
       email,
-      phone,
+      phone: normalizedPhone,
       client: 2, // 2 = Prospect status in Dolibarr
       note_public: note || undefined,
+      array_options: extrafields,
     };
 
     const createResp = await fetch(`${baseUrl}/thirdparties`, {
