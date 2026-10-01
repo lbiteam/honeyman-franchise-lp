@@ -1,720 +1,438 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   IndianRupee,
   Maximize2,
+  Clock,
   Coffee,
   CupSoda,
   Soup,
-  Leaf,
   Award,
-  TrendingUp,
   ShieldCheck,
-  ShoppingCart,
-  Hexagon,
-  Clock,
+  Truck,
+  Droplet,
+  ImageIcon,
 } from "lucide-react";
-import teaTransparent from "@/assets/tea transparent.webp";
-import chaiLogo from "@/assets/LOGO CHAI UPDATED  1NEW PNG (1).png";
-import bobaTeaVideo from "@/assets/8c6af69758524ba497d52870ec423cfc.webm";
+import chaiLogo from "@/assets/chaiplus-logo-gold.png";
+import chaiCup from "@/assets/chaiplus-cup.webp";
+// TODO: swap these dummy images for real outlet / product photos
+const outletImg: string | null = null; // e.g. import outletImg from "@/assets/chaiplus-outlet.webp"
 
-type InvestmentTier = {
-  badge: string;
-  title: string;
-  subtitle: string;
-  tagline: string;
-  investment: string;
-  size: string;
-  featured?: boolean;
-  payback: string;
+/* ============================================================
+   Tokens — black & gold, sampled from the HM Chai+ logo
+   ============================================================ */
+const T = {
+  black: "#000000",
+  surface: "#100F0D",
+  line: "rgba(201,162,75,0.22)",
+  gold: "#C9A24B",
+  goldLight: "#EBCB7A",
+  cream: "#F2E8D2",
+  muted: "#A89C86",
 };
+const serif = "font-['Cormorant_Garamond',Georgia,serif]";
+const sans = "font-['Josefin_Sans',system-ui,sans-serif]";
+const goldBtn =
+  "cp-btn relative inline-flex items-center justify-center overflow-hidden rounded-md bg-gradient-to-b from-[#F3D88E] via-[#D7AA4C] to-[#A97D2B] font-semibold text-black shadow-[0_12px_30px_-10px_rgba(201,162,75,0.7)] transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EBCB7A]";
+const focusRing =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EBCB7A]";
 
-const investmentTiers: InvestmentTier[] = [
-  {
-    badge: "Starter",
-    title: "Chai Plus",
-    subtitle: "Express",
-    tagline: "Compact, fast, neighborhood favorite",
-    investment: "₹5L – 8L",
-    size: "100 – 150 sq ft",
-    payback: "12 - 18 months",
-  },
-  {
-    badge: "★ Popular",
-    title: "Chai Plus",
-    subtitle: "Cafe",
-    tagline: "Most-chosen format for new owners",
-    investment: "₹15L – 25L",
-    size: "500 – 700 sq ft",
-    featured: true,
-    payback: "12 - 18 months",
-  },
-  {
-    badge: "Premium",
-    title: "Chai Plus",
-    subtitle: "Lounge",
-    tagline: "Full-experience destination cafe",
-    investment: "₹50L+",
-    size: "1200 – 1700 sq ft",
-    payback: "12 - 18 months",
-  },
+/* ============================================================
+   Content
+   ============================================================ */
+const investmentTiers = [
+  { name: "Express", tagline: "Compact kiosk for busy streets, offices and transit hubs", investment: "₹5L – 8L", size: "100 – 150 sq ft", payback: "12 – 18 months" },
+  { name: "Café", tagline: "Our most-chosen format: seating, full menu, delivery-ready", investment: "₹15L – 25L", size: "500 – 700 sq ft", payback: "12 – 18 months", featured: true },
+  { name: "Lounge", tagline: "A flagship destination for malls and premium high streets", investment: "₹50L+", size: "1,200 – 1,700 sq ft", payback: "12 – 18 months" },
 ];
 
 type MenuKey = "chai" | "bev" | "food";
-
-const menuData: Record<MenuKey, { name: string }[]> = {
-  chai: [
-    { name: "Desi Chai" },
-    { name: "English Tea" },
-    { name: "Herbal Chai" },
-    { name: "Masala Cutting" },
-    { name: "Saffron Kahwa" },
-    { name: "Honey Tulsi Chai" },
-  ],
-  bev: [
-    { name: "Kombucha" },
-    { name: "Boba Tea" },
-    { name: "Cold Brew" },
-    { name: "Fresh Fruit Crush" },
-    { name: "Honey Lemonade" },
-    { name: "Hydration Water" },
-  ],
-  food: [
-    { name: "Protein Bar" },
-    { name: "Honey Muesli" },
-    { name: "Breakfast Cereals" },
-    { name: "Dark Chocolate" },
-    { name: "Multigrain Cookies" },
-    { name: "Honey Granola" },
-  ],
+const menuTabs: { key: MenuKey; label: string; icon: typeof Coffee }[] = [
+  { key: "chai", label: "Chai", icon: Coffee },
+  { key: "bev", label: "Specialty beverages", icon: CupSoda },
+  { key: "food", label: "Food & wellness", icon: Soup },
+];
+const menuData: Record<MenuKey, string[]> = {
+  chai: ["Desi Chai", "English Tea", "Herbal Chai", "Masala Cutting", "Saffron Kahwa", "Honey Tulsi Chai"],
+  bev: ["Kombucha", "Honey Boba Tea", "Cold Brew", "Fresh Fruit Crush", "Honey Lemonade", "Hydration Water"],
+  food: ["Protein Bar", "Honey Muesli", "Breakfast Cereals", "Dark Chocolate", "Multigrain Cookies", "Honey Granola"],
 };
+const marqueeItems = Object.values(menuData).flat();
 
-const whyCards = [
-  {
-    icon: Award,
-    stat: "India's Only",
-    text: "Honey-sweetened café chain in the country",
-  },
-  {
-    icon: TrendingUp,
-    stat: "₹50,000 Cr+",
-    text: "Indian chai market growing fast",
-  },
-  {
-    icon: ShieldCheck,
-    stat: "46+ Years",
-    text: "Built on decades of brand trust",
-  },
-  {
-    icon: Hexagon,
-    stat: "Full Support",
-    text: "Location, Logistics & supply marketing",
-  },
-  {
-    icon: ShoppingCart,
-    stat: "Swiggy & Zomato ",
-    text: "Onboarding",
-  },
+const whyPoints = [
+  { icon: Award, stat: "India's only", text: "honey-sweetened chai café chain — a category you own in your city from day one." },
+  { icon: ShieldCheck, stat: "Since 1984", text: "a family legacy of honey and trust" },
+  { icon: Truck, stat: "End-to-end", text: "location, supply chain and launch marketing" },
 ];
 
+/* ============================================================
+   3D tilt — pointer-tracked, desktop only, off for reduced motion
+   ============================================================ */
+function useTilt<E extends HTMLElement>(max = 10) {
+  const ref = useRef<E>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    if (!mq.matches) return;
+    let raf = 0;
+    const move = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.style.setProperty("--rx", `${(-y * max).toFixed(2)}deg`);
+        el.style.setProperty("--ry", `${(x * max).toFixed(2)}deg`);
+        el.style.setProperty("--mx", `${((x + 0.5) * 100).toFixed(1)}%`);
+        el.style.setProperty("--my", `${((y + 0.5) * 100).toFixed(1)}%`);
+      });
+    };
+    const leave = () => {
+      cancelAnimationFrame(raf);
+      el.style.setProperty("--rx", "0deg");
+      el.style.setProperty("--ry", "0deg");
+    };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerleave", leave);
+    };
+  }, [max]);
+  return ref;
+}
+
+const TiltCard = ({ children, className = "", style, max = 8 }: { children: ReactNode; className?: string; style?: CSSProperties; max?: number }) => {
+  const ref = useTilt<HTMLDivElement>(max);
+  return (
+    <div ref={ref} className={`cp-tilt group relative ${className}`} style={style}>
+      {/* cursor-following gold spotlight */}
+      <span aria-hidden className="cp-spot pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      {children}
+    </div>
+  );
+};
+
+/* ============================================================
+   Section
+   ============================================================ */
 const ChaiPlusFranchiseSection = () => {
   const [activeTab, setActiveTab] = useState<MenuKey>("chai");
+  const stageRef = useTilt<HTMLDivElement>(14);
+
+  const trackApply = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
+    dl.push({ event: "chaiplus_apply", event_category: "Franchise", event_label: "ChaiPlus – Apply Now" });
+  };
 
   return (
     <section
       id="chai-plus-franchise"
-      className="relative overflow-hidden py-20 md:py-28"
-      style={{
-        background:
-          "radial-gradient(circle at 10% 0%, rgba(243,192,66,0.18), transparent 40%), radial-gradient(circle at 90% 100%, rgba(21,91,58,0.15), transparent 40%), linear-gradient(180deg, #fffbf0 0%, #fdf6e3 100%)",
-      }}
+      className={`relative isolate overflow-hidden scroll-mt-24 pb-16 pt-28 sm:pb-20 sm:pt-32 md:pb-28 md:pt-40 ${sans}`}
+      style={{ background: T.black, color: T.cream }}
     >
-      {/* honeycomb dot pattern */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 25%, rgba(212,160,23,0.08) 2px, transparent 3px), radial-gradient(circle at 75% 75%, rgba(21,91,58,0.07) 2px, transparent 3px)",
-          backgroundSize: "50px 50px",
-        }}
-      />
+      <style>{css}</style>
 
-      <div className="container relative z-10 mx-auto max-w-7xl px-5 md:px-8">
-        {/* ============== HERO ============== */}
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-          {/* Left – copy */}
-          <div className="text-center lg:text-left">
-            <span className="inline-flex items-center gap-2.5 rounded-full bg-[#0d3b2e] px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f3c042] shadow-lg">
-              <span className="text-[#d4a017]">❦</span>
-              Honeyman Chai Plus · Franchise
-              <span className="text-[#d4a017]">❦</span>
-            </span>
+      {/* Background: honeycomb + gold glows */}
+      <div aria-hidden className="cp-honeycomb pointer-events-none absolute inset-0 -z-10" />
+      <div aria-hidden className="pointer-events-none absolute -end-40 -top-40 -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.22),transparent_65%)] blur-2xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-48 -start-40 -z-10 h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.12),transparent_65%)] blur-2xl" />
 
-            <h2 className="mt-6 font-display text-4xl font-extrabold leading-[0.95] tracking-tight text-[#0d3b2e] sm:text-5xl lg:text-[64px]">
-              Join the Global Revolution
-              <br />
-              Against{" "}
-              <span className="relative inline-block italic font-normal text-[#d4a017]">
-                Refined Sugar
-                <span
-                  aria-hidden
-                  className="absolute bottom-1 left-0 -z-0 h-2 w-full rounded-full bg-[#f3c042] opacity-40"
-                />
-              </span>
+      <div className="container mx-auto max-w-7xl px-5 md:px-8">
+        {/* ======================= HERO ======================= */}
+        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+          <div className="text-center lg:text-start">
+            <img
+              src={chaiLogo}
+              alt="Honeyman Chai+ — a family legacy since 1984"
+              className="cp-reveal mx-auto h-auto w-[clamp(170px,40vw,250px)] drop-shadow-[0_10px_30px_rgba(201,162,75,0.35)] lg:mx-0"
+            />
+
+            <h2
+              className={`cp-reveal cp-shimmer mt-8 ${serif} text-[clamp(2.4rem,6.5vw,4.4rem)] font-semibold leading-[1.02]`}
+              style={{ animationDelay: "120ms" }}
+            >
+              Chai, sweetened the way it should be
             </h2>
 
-            <p className="mx-auto mt-5 max-w-xl text-base font-medium leading-relaxed text-[#155b3a] sm:text-lg lg:mx-0">
-              Healthy Chai. Happy Planet. Profitable Future. India&apos;s 1st
-              honey-sweetened chai &amp; cafe brand is opening doors for
-              like-minded entrepreneurs.
-            </p>
-
-            {/* Logo + CTAs */}
-            <div className="mt-8 flex flex-col items-center gap-5 sm:flex-row sm:items-center lg:justify-start">
-              <img
-                src={chaiLogo}
-                alt="Honeyman Chai Plus"
-                className="h-16 w-auto drop-shadow-md sm:h-20"
-              />
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#chai-plus-invest"
-                  className="inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-[#155b3a] to-[#0d3b2e] px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-[#f3c042] shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl"
-                >
-                  Explore Models
-                </a>
-                <Link
-                  to="/#franchise-form"
-                  className="inline-flex items-center justify-center rounded-xl border-2 border-[#0d3b2e] bg-white/70 px-7 py-3.5 text-sm font-bold uppercase tracking-wider text-[#0d3b2e] backdrop-blur transition hover:bg-[#0d3b2e] hover:text-[#f3c042]"
-                  onClick={() => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
-                    dl.push({
-                      event: "chaiplus_apply",
-                      event_category: "Franchise",
-                      event_label: "ChaiPlus – Apply Now",
-                    });
-                  }}
-                >
-                  Apply Now
-                </Link>
-              </div>
-            </div>
-
-            {/* mini stat row */}
-            {/* <div className="mt-10 grid grid-cols-3 gap-4 lg:max-w-md">
-              {[
-                { value: "180+", label: "Outlets" },
-                { value: "25+", label: "Cities" },
-                { value: "100%", label: "Natural" },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="rounded-2xl border border-[#155b3a]/15 bg-white/80 px-3 py-4 text-center shadow-sm backdrop-blur"
-                >
-                  <div className="font-display text-2xl font-extrabold text-[#0d3b2e]">
-                    {s.value}
-                  </div>
-                  <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-[#1e7a4d]">
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div> */}
-          </div>
-
-          {/* Right – tea transparent image with green halo */}
-          <div className="relative flex items-center justify-center mt-10">
-            {/* large soft glow */}
-            <div
-              aria-hidden
-              className="absolute inset-0 mx-auto h-[420px] w-[420px] rounded-full bg-gradient-to-br from-[#1e7a4d]/30 via-[#155b3a]/15 to-transparent blur-3xl sm:h-[520px] sm:w-[520px]"
-            />
-            {/* circular green disc behind cup */}
-            <div
-              aria-hidden
-              className="absolute h-[320px] w-[320px] rounded-full bg-gradient-to-br from-[#0d3b2e] to-[#155b3a] shadow-[0_30px_70px_-20px_rgba(13,59,46,0.6)] sm:h-[380px] sm:w-[380px]"
-            />
-            {/* dashed honey ring */}
-            <div
-              aria-hidden
-              className="absolute h-[360px] w-[360px] rounded-full border-2 border-dashed border-[#f3c042]/60 sm:h-[420px] sm:w-[420px]"
-            />
-
-            <img
-              src={teaTransparent}
-              alt="Honeyman Chai Plus signature cup"
-              className="relative z-10  w-[300px] animate-float drop-shadow-[0_25px_35px_rgba(13,59,46,0.45)] sm:w-[380px] lg:w-[440px]"
-              loading="lazy"
-            />
-
-            {/* Floating honey badge */}
-            <div className="absolute -right-2 top-10 z-20 hidden flex-col items-center justify-center rounded-2xl border-4 border-white bg-gradient-to-br from-[#f3c042] to-[#d4a017] px-4 py-3 text-center shadow-2xl sm:flex">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#0d3b2e]">
-                Sweetened with
-              </span>
-              <span className="font-display text-lg font-extrabold leading-tight text-[#0d3b2e]">
-                Pure Honey
-              </span>
-            </div>
-
-            {/* Floating zero sugar badge */}
-            <div className="absolute -left-2 bottom-8 z-20 hidden flex-col items-center justify-center rounded-2xl border-4 border-white bg-white px-4 py-3 text-center shadow-2xl sm:flex">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#1e7a4d]">
-                No
-              </span>
-              <span className="font-display text-base font-extrabold leading-tight text-[#0d3b2e]">
-               Added Refined Sugar
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ============== INVESTMENT MODELS ============== */}
-        <div id="chai-plus-invest" className="mt-24 scroll-mt-24 md:mt-28">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="font-display text-sm font-semibold tracking-[0.25em] text-[#d4a017]">
-                01 — INVEST
-              </span>
-              <h3 className="mt-2 font-display text-3xl font-extrabold leading-none tracking-tight text-[#0d3b2e] sm:text-4xl lg:text-[44px]">
-                Choose your franchise model
-              </h3>
-            </div>
-            <p className="max-w-sm text-sm text-[#1e7a4d] sm:text-right">
-              Three formats, one philosophy. Pick the size that fits your
-              ambition and city.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {investmentTiers.map((tier) => {
-              const isFeatured = !!tier.featured;
-              return (
-                <div
-                  key={tier.subtitle}
-                  className={`group relative overflow-hidden rounded-3xl border p-7 transition-all duration-500 ${
-                    isFeatured
-                      ? "scale-100 border-transparent bg-[#0d3b2e] text-[#fdf6e3] shadow-[0_30px_60px_-20px_rgba(13,59,46,0.5)] md:-translate-y-3"
-                      : "border-[#155b3a]/15 bg-[#fdf6e3] hover:-translate-y-2 hover:bg-white hover:shadow-[0_25px_50px_-20px_rgba(13,59,46,0.3)]"
-                  }`}
-                >
-                  {/* top accent strip */}
-                  <span
-                    aria-hidden
-                    className={`absolute inset-x-0 top-0 h-1 origin-left bg-gradient-to-r from-[#d4a017] to-[#f3c042] transition-transform duration-500 ${
-                      isFeatured ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                    }`}
-                  />
-
-                  <span
-                    className={`inline-block rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] ${
-                      isFeatured
-                        ? "bg-[#d4a017] text-[#0d3b2e]"
-                        : "bg-[#0d3b2e] text-[#f3c042]"
-                    }`}
-                  >
-                    {tier.badge}
-                  </span>
-
-                  <div
-                    className={`mt-5 flex h-16 w-16 items-center justify-center rounded-2xl ${
-                      isFeatured ? "bg-[#d4a017]/15" : "bg-[#1e7a4d]/10"
-                    }`}
-                  >
-                    <Coffee
-                      className={`h-8 w-8 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110 ${
-                        isFeatured ? "text-[#f3c042]" : "text-[#155b3a]"
-                      }`}
-                      strokeWidth={2}
-                    />
-                  </div>
-
-                  <h4
-                    className={`mt-5 font-display text-2xl font-extrabold leading-tight ${
-                      isFeatured ? "text-white" : "text-[#0d3b2e]"
-                    }`}
-                  >
-                    {tier.title}
-                    <br />
-                    {tier.subtitle}
-                  </h4>
-                  <p
-                    className={`mt-1 text-sm ${
-                      isFeatured ? "text-[#f3c042]" : "text-[#1e7a4d]"
-                    }`}
-                  >
-                    {tier.tagline}
-                  </p>
-
-                  {/* stat rows */}
-                  <div
-                    className={`mt-6 flex items-center gap-3 border-t border-dashed py-3.5 ${
-                      isFeatured ? "border-[#f3c042]/25" : "border-[#155b3a]/20"
-                    }`}
-                  >
-                    <div
-                      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${
-                        isFeatured
-                          ? "bg-[#d4a017] text-[#0d3b2e]"
-                          : "bg-[#0d3b2e] text-[#f3c042]"
-                      }`}
-                    >
-                      <IndianRupee className="h-4 w-4" strokeWidth={2.5} />
-                    </div>
-                    <div>
-                      <div
-                        className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${
-                          isFeatured ? "text-[#f3c042]" : "text-[#1e7a4d]"
-                        }`}
-                      >
-                        Investment
-                      </div>
-                      <div
-                        className={`font-display text-lg font-bold ${
-                          isFeatured ? "text-white" : "text-[#0d3b2e]"
-                        }`}
-                      >
-                        {tier.investment}
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={`flex items-center gap-3 border-t border-dashed py-3.5 ${
-                      isFeatured ? "border-[#f3c042]/25" : "border-[#155b3a]/20"
-                    }`}
-                  >
-                    <div
-                      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${
-                        isFeatured
-                          ? "bg-[#d4a017] text-[#0d3b2e]"
-                          : "bg-[#0d3b2e] text-[#f3c042]"
-                      }`}
-                    >
-                      <Maximize2 className="h-4 w-4" strokeWidth={2.5} />
-                    </div>
-                    <div>
-                      <div
-                        className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${
-                          isFeatured ? "text-[#f3c042]" : "text-[#1e7a4d]"
-                        }`}
-                      >
-                        Size
-                      </div>
-                      <div
-                        className={`font-display text-lg font-bold ${
-                          isFeatured ? "text-white" : "text-[#0d3b2e]"
-                        }`}
-                      >
-                        {tier.size}
-                      </div>
-                    </div>
-                   
-                  </div>
-                  <div
-                    className={`mt-6 flex items-center gap-3 border-t border-dashed py-3.5 ${
-                      isFeatured ? "border-[#f3c042]/25" : "border-[#155b3a]/20"
-                    }`}
-                  >
-                    <div
-                      className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${
-                        isFeatured
-                          ? "bg-[#d4a017] text-[#0d3b2e]"
-                          : "bg-[#0d3b2e] text-[#f3c042]"
-                      }`}
-                    >
-                      <Clock className="h-4 w-4" strokeWidth={2.5} />
-                    </div>
-                    <div>
-                      <div
-                        className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${
-                          isFeatured ? "text-[#f3c042]" : "text-[#1e7a4d]"
-                        }`}
-                      >
-                        Payback
-                      </div>
-                      <div
-                        className={`font-display text-lg font-bold ${
-                          isFeatured ? "text-white" : "text-[#0d3b2e]"
-                        }`}
-                      >
-                        {tier.payback}
-                      </div>
-                    </div>
-                  </div>
-                
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ============== MENU TABS ============== */}
-        <div className="mt-24 md:mt-28">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="font-display text-sm font-semibold tracking-[0.25em] text-[#d4a017]">
-                02 — TASTE
-              </span>
-              <h3 className="mt-2 font-display text-3xl font-extrabold leading-none tracking-tight text-[#0d3b2e] sm:text-4xl lg:text-[44px]">
-                The signature menu
-              </h3>
-            </div>
-            <p className="max-w-sm text-sm text-[#1e7a4d] sm:text-right">
-              Honey-sweetened chai, wellness drinks, and clean-label snacks. Tap
-              a category to explore.
-            </p>
-          </div>
-
-          <div className="relative overflow-hidden rounded-3xl bg-[#0d3b2e] p-7 text-[#fdf6e3] shadow-2xl sm:p-10 md:p-12">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(243,192,66,0.18), transparent 70%)",
-              }}
-            />
-
-            {/* tabs */}
-            <div className="relative z-10 mb-8 flex flex-wrap gap-2">
-              {[
-                { key: "chai" as MenuKey, label: "Chai Specials", icon: Coffee },
-                {
-                  key: "bev" as MenuKey,
-                  label: "Specialty Beverages",
-                  icon: CupSoda,
-                },
-                {
-                  key: "food" as MenuKey,
-                  label: "Food & Wellness",
-                  icon: Soup,
-                },
-              ].map((t) => {
-                const Icon = t.icon;
-                const active = activeTab === t.key;
-                return (
-                  <button
-                    key={t.key}
-                    type="button"
-                    onClick={() => setActiveTab(t.key)}
-                    className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold transition-all sm:text-sm ${
-                      active
-                        ? "border border-[#d4a017] bg-[#d4a017] text-[#0d3b2e] shadow-md"
-                        : "border border-[#f3c042]/30 bg-transparent text-[#fdf6e3] hover:border-[#d4a017] hover:bg-[#f3c042]/10"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" strokeWidth={2} />
-                    {t.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* menu grid */}
-            <div
-              key={activeTab}
-              className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            <p
+              className="cp-reveal mx-auto mt-6 max-w-xl text-base leading-relaxed sm:text-lg lg:mx-0"
+              style={{ color: T.muted, animationDelay: "220ms" }}
             >
-              {menuData[activeTab].map((item, i) => (
-                <div
-                  key={`${activeTab}-${item.name}`}
-                  className="group flex animate-fade-in items-center gap-3.5 rounded-2xl border border-[#f3c042]/15 bg-[#fdf6e3]/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#d4a017] hover:bg-[#f3c042]/10"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                >
-                  <Leaf
-                    className="h-6 w-6 flex-shrink-0 text-[#7cb342]"
-                    fill="#7cb342"
-                  />
-                  <span className="font-display text-base font-semibold sm:text-lg">
-                    {item.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ============== WHY US ============== */}
-        <div className="mt-24 md:mt-28">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="font-display text-sm font-semibold tracking-[0.25em] text-[#d4a017]">
-                03 — WHY
-              </span>
-              <h3 className="mt-2 font-display text-3xl font-extrabold leading-none tracking-tight text-[#0d3b2e] sm:text-4xl lg:text-[44px]">
-                Why Chai Plus is the future
-              </h3>
-            </div>
-            <p className="max-w-sm text-sm text-[#1e7a4d] sm:text-right">
-              Five reasons backed by trend, trust, and a ₹50,000 Cr+ market.
+              India's first honey-sweetened chai café, with no added refined sugar. Open a Chai+ outlet backed by
+              four decades of Honeyman know-how.
             </p>
+
+            <div className="cp-reveal mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start" style={{ animationDelay: "320ms" }}>
+              <Link to="/#franchise-form" onClick={trackApply} className={`${goldBtn} px-8 py-4 text-sm tracking-wide`}>
+                Apply for a franchise
+              </Link>
+              <a
+                href="#chai-plus-invest"
+                className={`inline-flex items-center justify-center rounded-md border border-[#C9A24B] px-8 py-4 text-sm font-semibold tracking-wide text-[#EBCB7A] transition hover:bg-[#C9A24B]/10 ${focusRing}`}
+              >
+                Compare formats
+              </a>
+            </div>
+
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {whyCards.map(({ icon: Icon, stat, text }) => (
-              <div
-                key={stat}
-                className="group relative overflow-hidden rounded-2xl border border-[#155b3a]/10 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#d4a017] hover:shadow-[0_20px_40px_-15px_rgba(212,160,23,0.3)]"
-              >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#fef6df] transition-all duration-500 group-hover:rotate-[360deg] group-hover:bg-[#0d3b2e]">
-                  <Icon className="h-6 w-6 text-[#0d3b2e] transition-colors group-hover:text-[#f3c042]" />
-                </div>
-                <div className="font-display text-lg font-extrabold leading-tight text-[#0d3b2e] sm:text-xl">
-                  {stat}
-                </div>
-                <p className="mt-1.5 text-xs leading-snug text-[#1e7a4d] sm:text-[13px]">
-                  {text}
-                </p>
-
+          {/* ---------- 3D cup stage ---------- */}
+          <div className="relative mx-auto my-8 w-full max-w-[min(440px,88vw)] [perspective:1200px] lg:my-12">
+            <div ref={stageRef} className="cp-tilt cp-stage relative [transform-style:preserve-3d]">
+              {/* rotating gold ring (back layer) */}
+              <div aria-hidden className="cp-ring absolute left-1/2 top-[42%] aspect-square w-[118%] rounded-full" style={{ transform: "translate(-50%,-50%) translateZ(-60px)" }} />
+              {/* rising honey drops */}
+              {[12, 30, 72, 88].map((left, i) => (
                 <span
+                  key={left}
                   aria-hidden
-                  className="absolute inset-x-1/2 bottom-0 h-1 w-3/5 origin-center -translate-x-1/2 scale-x-0 rounded-t-md bg-[#d4a017] transition-transform duration-300 group-hover:scale-x-100"
+                  className="cp-drop absolute bottom-6 h-2.5 w-2.5 rounded-full bg-gradient-to-b from-[#F3D88E] to-[#A97D2B]"
+                  style={{ left: `${left}%`, animationDelay: `${i * 1.3}s` }}
                 />
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
 
-        {/* ============== BOBA TEA SPECIALTY (3D) ============== */}
-        <div className="mt-24 md:mt-28">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="font-display text-sm font-semibold tracking-[0.25em] text-[#d4a017]">
-                04 — SIGNATURE
-              </span>
-              <h3 className="mt-2 font-display text-3xl font-extrabold leading-none tracking-tight text-[#0d3b2e] sm:text-4xl lg:text-[44px]">
-                Our star: Honey Boba Tea
-              </h3>
-            </div>
-            <p className="max-w-sm text-sm text-[#1e7a4d] sm:text-right">
-              The bubble-tea craze, reimagined with pure honey. A high-margin,
-              Insta-worthy bestseller that keeps customers coming back.
-            </p>
-          </div>
-
-          <div className="relative overflow-hidden rounded-[2rem] bg-[#5f7f3f]/90 to-[#155b3a]/40 p-8 shadow-[0_40px_80px_-30px_rgba(13,59,46,0.6)] sm:p-12">
-            {/* ambient glows */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(243,192,66,0.22), transparent 70%)",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(124,179,66,0.18), transparent 70%)",
-              }}
-            />
-
-            <div className="relative z-10 grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-              {/* Left – 3D video stage */}
-              <div
-                className="relative flex items-center justify-center"
-                style={{ perspective: "1200px" }}
-              >
-                {/* halo + disc behind cup */}
-                <div
-                  aria-hidden
-                  className="absolute h-[300px] w-[300px] rounded-full bg-gradient-to-br from-[#1e7a4d]/40 via-[#155b3a]/20 to-transparent blur-3xl sm:h-[380px] sm:w-[380px]"
-                />
-                <div
-                  aria-hidden
-                  className="absolute h-[260px] w-[260px] rounded-full border-2 border-dashed border-[#f3c042]/50 sm:h-[220px] sm:w-[220px]"
-                />
-
-                {/* 3D tilting card */}
-                <div
-                  className="group relative animate-float [transform-style:preserve-3d] transition-transform duration-500 ease-out hover:[transform:rotateX(6deg)_rotateY(-12deg)]"
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  <div className="relative overflow-hidden  rounded-[2rem] border border-[#1f5a45]/30 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] [transform:translateZ(30px)]">
-                    <video
-                      src={bobaTeaVideo}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="h-[350px] w-[200px] object-cover sm:h-[400px] sm:w-[200px]"
-                    />
-                    {/* sheen overlay */}
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                    />
-                  </div>
-
-                  {/* floating specialty chip – top */}
-                  {/* <div className="absolute -right-4 top-17 z-20 flex flex-col items-center justify-center rounded-2xl border-4 border-white bg-[#0D3B2E] px-4 py-2.5 text-center shadow-2xl [transform:translateZ(80px)]">
-                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#0d3b2e]">
-                      Bestseller
-                    </span>
-                    <span className="font-display text-base font-extrabold leading-tight text-[#0d3b2e]">
-                      Boba Tea
-                    </span>
-                  </div> */}
-
-                  {/* floating specialty chip – bottom */}
-                  <div className="absolute -left-4 bottom-10 z-20 flex flex-col items-center justify-center rounded-2xl border-4 border-white bg-white px-4 py-2.5 text-center shadow-2xl [transform:translateZ(80px)]">
-                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#1e7a4d]">
-                      Honey
-                    </span>
-                    <span className="font-display text-sm font-extrabold leading-tight text-[#0d3b2e]">
-                      Sweetened
-                    </span>
-                  </div>
+              {/* arch photo frame */}
+              <div className="relative [transform:translateZ(20px)]">
+                <div className="absolute -inset-2.5 rounded-t-[999px] rounded-b-3xl border" style={{ borderColor: T.line }} />
+                <div className="relative overflow-hidden rounded-t-[999px] rounded-b-3xl border-2 border-[#C9A24B] shadow-[0_40px_80px_-30px_rgba(201,162,75,0.55)]">
+                  <img src={chaiCup} alt="Honeyman Chai+ black and gold cup" className="aspect-[4/5] w-full object-cover" loading="lazy" />
+                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                  <span aria-hidden className="cp-glare pointer-events-none absolute inset-0" />
                 </div>
               </div>
 
-              {/* Right – specialty highlights */}
-              <div className="text-[#fdf6e3]">
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#f3c042]/15 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#f3c042]">
-                  <CupSoda className="h-3.5 w-3.5" /> Specialty Beverage
-                </span>
-                <h4 className="mt-5 font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl">
-                  Chewy pearls, honey sweetness, No added  refine sugar
-                </h4>
-                <p className="mt-4 text-sm leading-relaxed text-[#cfe6d8] sm:text-base">
-                Tiny pearls packed with fruity goodness.
-
-Every boba bursts the moment you bite into it, releasing a splash of delicious flavor that transforms every sip and spoonful into a fun experience.
-
-Add a pop of excitement to your favorite ice cream, shakes, waffles, smoothies, and beverages.
-                </p>
-
-                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {[
-                    { icon: TrendingUp, stat: "High", label: "Profit Margin" },
-                    { icon: Leaf, stat: "100%", label: "Natural Honey" },
-                    { icon: Award, stat: "Top", label: "Customer Pick" },
-                  ].map(({ icon: Icon, stat, label }) => (
-                    <div
-                      key={label}
-                      className="rounded-2xl border border-[#f3c042]/20 bg-[#fdf6e3]/5 px-4 py-4 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#d4a017] hover:bg-[#f3c042]/10"
-                    >
-                      <Icon className="mx-auto mb-2 h-6 w-6 text-[#f3c042]" />
-                      <div className="font-display text-lg font-extrabold text-white">
-                        {stat}
-                      </div>
-                      <div className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#9fcab4]">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
+              {/* floating chips (front layers) */}
+              <div className="cp-float absolute end-0 top-[14%] [transform:translateZ(70px)] sm:-end-6">
+                <div className="flex items-center gap-2 rounded-xl border border-[#C9A24B] bg-black/85 px-3.5 py-2.5 backdrop-blur">
+                  <Droplet className="h-4 w-4 fill-[#D7AA4C] text-[#D7AA4C]" />
+                  <span className="text-xs font-semibold text-[#EBCB7A] sm:text-sm">Pure honey</span>
+                </div>
+              </div>
+              <div className="cp-float absolute bottom-[12%] start-0 [transform:translateZ(90px)] sm:-start-8" style={{ animationDelay: "1.5s" }}>
+                <div className="rounded-xl bg-gradient-to-b from-[#F3D88E] to-[#B8892F] px-4 py-2.5 text-black shadow-xl">
+                  <div className="text-[11px] font-semibold">No added</div>
+                  <div className={`${serif} text-lg font-bold leading-none`}>Refined sugar</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ======================= MARQUEE ======================= */}
+      <div className="relative mt-20 -rotate-1 border-y border-[#C9A24B]/40 bg-gradient-to-r from-[#A97D2B] via-[#E3BC62] to-[#A97D2B] py-3.5 sm:mt-24">
+        <div className="cp-marquee flex w-max items-center gap-8 whitespace-nowrap" aria-hidden>
+          {[...marqueeItems, ...marqueeItems].map((item, i) => (
+            <span key={i} className={`flex items-center gap-8 ${serif} text-xl font-semibold text-black sm:text-2xl`}>
+              {item}
+              <span className="h-2 w-2 rotate-45 bg-black/70" />
+            </span>
+          ))}
+        </div>
+        <p className="sr-only">Menu includes chai, specialty beverages and wellness food.</p>
+      </div>
+
+      <div className="container mx-auto max-w-7xl px-5 md:px-8">
+        {/* ======================= FORMATS ======================= */}
+        <div id="chai-plus-invest" className="mt-20 scroll-mt-24 sm:mt-28">
+          <SectionHead title="Choose your format" note="Three sizes, one recipe. Pick the one that fits your location and budget." />
+
+          <div className="grid gap-6 md:grid-cols-3 md:items-stretch md:[perspective:1400px]">
+            {investmentTiers.map((tier) => {
+              const f = !!tier.featured;
+              const rows = [
+                { icon: IndianRupee, label: "Investment", value: tier.investment },
+                { icon: Maximize2, label: "Area", value: tier.size },
+                { icon: Clock, label: "Expected payback", value: tier.payback },
+              ];
+              return (
+                <TiltCard
+                  key={tier.name}
+                  className={`flex flex-col rounded-2xl p-6 sm:p-7 ${f ? "cp-border-glow md:-translate-y-4" : ""}`}
+                  style={{
+                    background: f ? "linear-gradient(180deg,#221C10 0%,#0C0B09 100%)" : T.surface,
+                    border: `1px solid ${f ? T.gold : T.line}`,
+                  }}
+                >
+                  {f && (
+                    <span className="absolute -top-3 start-6 rounded-full bg-gradient-to-b from-[#F3D88E] to-[#B8892F] px-3 py-1 text-xs font-semibold text-black shadow-lg">
+                      Most popular
+                    </span>
+                  )}
+                  <div className="[transform:translateZ(30px)]">
+                    <p className="text-sm" style={{ color: T.muted }}>Chai+</p>
+                    <h4 className={`${serif} text-4xl font-semibold`} style={{ color: f ? T.goldLight : T.cream }}>
+                      {tier.name}
+                    </h4>
+                    <p className="mt-2 text-sm leading-relaxed md:min-h-[3rem]" style={{ color: T.muted }}>{tier.tagline}</p>
+                  </div>
+
+                  <dl className="mt-6 flex-1">
+                    {rows.map(({ icon: Icon, label, value }) => (
+                      <div key={label} className="flex items-center gap-4 border-t py-4" style={{ borderColor: T.line }}>
+                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#C9A24B] text-[#EBCB7A]">
+                          <Icon className="h-4 w-4" strokeWidth={2} />
+                        </span>
+                        <div>
+                          <dt className="text-xs" style={{ color: T.muted }}>{label}</dt>
+                          <dd className={`${serif} text-xl font-semibold`} style={{ color: T.cream }}>{value}</dd>
+                        </div>
+                      </div>
+                    ))}
+                  </dl>
+
+                 
+                </TiltCard>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ======================= MENU ======================= */}
+        <div className="mt-20 sm:mt-28">
+          <SectionHead title="What you'll serve" note="Honey-sweetened chai, wellness drinks and clean-label snacks." />
+
+          <div className="relative overflow-hidden rounded-3xl border p-5 sm:p-10" style={{ background: T.surface, borderColor: T.line }}>
+            <img aria-hidden src={chaiLogo} alt="" className="pointer-events-none absolute -bottom-10 -end-10 w-64 opacity-[0.06] sm:w-96" />
+
+            <div role="tablist" aria-label="Menu categories" className="relative -mx-1 mb-8 flex snap-x gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
+              {menuTabs.map(({ key, label, icon: Icon }) => {
+                const active = activeTab === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setActiveTab(key)}
+                    className={`inline-flex shrink-0 snap-start items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition ${focusRing} ${
+                      active
+                        ? "border-transparent bg-gradient-to-b from-[#F3D88E] to-[#B8892F] text-black shadow-[0_8px_24px_-8px_rgba(201,162,75,0.7)]"
+                        : "border-[#C9A24B]/35 text-[#F2E8D2] hover:border-[#C9A24B]"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" strokeWidth={2} />
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <ul key={activeTab} role="tabpanel" className="relative grid grid-cols-1 gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+              {menuData[activeTab].map((item, i) => (
+                <li
+                  key={item}
+                  className={`cp-item flex items-center gap-4 border-b py-4 ${serif} text-xl font-medium sm:text-2xl`}
+                  style={{ borderColor: T.line, color: T.cream, animationDelay: `${i * 50}ms` }}
+                >
+                  <span aria-hidden className="h-2.5 w-2.5 shrink-0 rotate-45 bg-gradient-to-br from-[#F3D88E] to-[#A97D2B]" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* ======================= WHY (bento) ======================= */}
+        
+      </div>
     </section>
   );
 };
+
+const ImageTile = ({ src, alt, caption }: { src: string | null; alt: string; caption: string }) => (
+  <TiltCard
+    max={9}
+    className="relative min-h-[220px] overflow-hidden rounded-2xl border"
+    style={{ borderColor: T.line, background: T.surface }}
+  >
+    {src ? (
+      <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+    ) : (
+      /* dummy placeholder — shows until a real photo is added */
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_50%_40%,rgba(201,162,75,0.25),transparent_65%)]">
+        <img aria-hidden src={chaiLogo} alt="" className="w-24 opacity-80" />
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: T.muted }}>
+          <ImageIcon className="h-3.5 w-3.5" /> Photo coming soon
+        </span>
+      </div>
+    )}
+    <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+    <span className={`absolute bottom-4 start-5 ${serif} text-xl font-semibold text-[#EBCB7A] [transform:translateZ(40px)]`}>
+      {caption}
+    </span>
+  </TiltCard>
+);
+
+const SectionHead = ({ title, note }: { title: string; note: string }) => (
+  <div className="mb-10 flex flex-col gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-start">
+    <h3 className={`cp-shimmer ${serif} text-[clamp(2rem,4.5vw,3rem)] font-semibold leading-tight`}>{title}</h3>
+    <p className="mx-auto max-w-sm text-sm sm:mx-0 sm:text-end" style={{ color: T.muted }}>{note}</p>
+  </div>
+);
+
+/* ============================================================
+   Scoped CSS — keyframes + 3D helpers (no Tailwind config needed)
+   ============================================================ */
+const css = `
+#chai-plus-franchise .cp-honeycomb{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='98' viewBox='0 0 56 98'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66zm0 32L0 82V66l28 16 28-16v16L28 98z' fill='none' stroke='%23C9A24B' stroke-opacity='0.09'/%3E%3C/svg%3E");
+  -webkit-mask-image:radial-gradient(ellipse at 70% 10%,#000 0%,transparent 70%);
+          mask-image:radial-gradient(ellipse at 70% 10%,#000 0%,transparent 70%);
+}
+#chai-plus-franchise .cp-honeycomb-dark{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='98' viewBox='0 0 56 98'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66zm0 32L0 82V66l28 16 28-16v16L28 98z' fill='none' stroke='%23000' stroke-opacity='0.12'/%3E%3C/svg%3E");
+}
+#chai-plus-franchise .cp-shimmer{
+  background:linear-gradient(100deg,#9A7426 0%,#E9C46A 25%,#FFF1C4 40%,#E9C46A 55%,#9A7426 100%);
+  background-size:220% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+#chai-plus-franchise .cp-tilt{
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;transition:transform .35s cubic-bezier(.2,.7,.2,1);will-change:transform;
+}
+#chai-plus-franchise .cp-spot{
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(235,203,122,0.16),transparent 45%);
+}
+#chai-plus-franchise .cp-glare{
+  background:radial-gradient(500px circle at var(--mx,30%) var(--my,20%),rgba(255,241,196,0.22),transparent 40%);
+  mix-blend-mode:screen;
+}
+#chai-plus-franchise .cp-ring{
+  background:conic-gradient(from 0deg,transparent 0 20%,rgba(235,203,122,.65) 30%,transparent 40% 70%,rgba(201,162,75,.45) 80%,transparent 90%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));
+}
+#chai-plus-franchise .cp-drop{opacity:0}
+#chai-plus-franchise .cp-btn::after{
+  content:"";position:absolute;inset:0;transform:translateX(-120%);
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+}
+#chai-plus-franchise .cp-btn:hover::after{transform:translateX(120%);transition:transform .8s ease}
+#chai-plus-franchise .cp-border-glow{box-shadow:0 0 0 1px rgba(201,162,75,.4),0 30px 70px -25px rgba(201,162,75,.5)}
+
+@media (prefers-reduced-motion:no-preference){
+  #chai-plus-franchise .cp-reveal{animation:cp-rise-in .9s cubic-bezier(.2,.7,.2,1) both}
+  #chai-plus-franchise .cp-shimmer{animation:cp-shimmer 6s ease-in-out infinite}
+  #chai-plus-franchise .cp-ring{animation:cp-spin 18s linear infinite}
+  #chai-plus-franchise .cp-float > *{animation:cp-float 5s ease-in-out infinite;animation-delay:inherit}
+  #chai-plus-franchise .cp-drop{animation:cp-drop 6s ease-in infinite}
+  #chai-plus-franchise .cp-marquee{animation:cp-marquee 45s linear infinite}
+  #chai-plus-franchise .cp-item{animation:cp-rise-in .45s ease-out both}
+}
+@media (prefers-reduced-motion:reduce){ #chai-plus-franchise .cp-drop{display:none} }
+
+@keyframes cp-rise-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes cp-shimmer{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@keyframes cp-spin{to{transform:translate(-50%,-50%) translateZ(-60px) rotate(360deg)}}
+@keyframes cp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes cp-drop{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:.9}100%{opacity:0;transform:translateY(-260px) scale(1)}}
+@keyframes cp-marquee{to{transform:translateX(-50%)}}
+`;
 
 export default ChaiPlusFranchiseSection;
