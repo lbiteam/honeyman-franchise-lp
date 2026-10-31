@@ -274,7 +274,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                 </div>
               )}
 
-              {/* Coming Soon — hidden when a model filter is active */}
+              {/* Coming Soon — hidden when a model filter is active
               {selectedModel === "All" && (
               <>
               <h3 className="font-bold text-orange-700 text-base mb-2">Coming Soon</h3>
@@ -314,7 +314,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
                 </div>
               )}
               </>
-              )}
+              )} */}
             </div>
           )}
         </div>
