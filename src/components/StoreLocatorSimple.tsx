@@ -315,7 +315,7 @@ const StoreLocatorSimple = ({ id, className }: StoreLocatorSimpleProps) => {
               )}
               </>
               )} */}
-            </div>
+            </div>  
           )}
         </div>
       );
